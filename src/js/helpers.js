@@ -15,9 +15,11 @@ export const getJSON = async function (url) {
     const resp = await Promise.race(raceFetch);
     console.log(resp);
     const data = await resp.json();
-    console.log(data);
+    resp.ok ? "" : (data.id = location.hash.slice(1));
     if (!resp.ok)
-      throw new Error(`data-message ${data.message} (${resp.status})`);
+      throw new Error(
+        `data-message ${data.message},${data.id}, (${resp.status})`,
+      );
     return data;
   } catch (error) {
     console.log("GETJSON");

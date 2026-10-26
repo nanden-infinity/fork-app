@@ -726,18 +726,21 @@ const controlRecipe = async function() {
     try {
         if (!id) return;
         (0, _recipeViewsJsDefault.default).renderSpinner();
-        // 1) Loading recipe
+        // 1)"" Loading recipe
         await (0, _modalJs.loadRecipe)(id);
         // 2 Rendering recipe
         (0, _recipeViewsJsDefault.default).render((0, _modalJs.state).recipe);
     } catch (error) {
+        // calling the error methodo
+        (0, _recipeViewsJsDefault.default).renderError();
         console.log(`O seu erro ${error}`);
     }
 };
-[
-    "load",
-    "hashchange"
-].forEach((e)=>window.addEventListener(e, controlRecipe));
+const init = function() {
+    // iniciando o app com a funcao init logo no inicio  TODO
+    (0, _recipeViewsJsDefault.default).addHandlerRender(controlRecipe);
+};
+init();
 
 },{"./modal.js":"jJ31c","./views/recipeViews.js":"eC0AB","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"jJ31c":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -765,7 +768,8 @@ const loadRecipe = async function(id) {
             ingredients: recipe.ingredients
         };
     } catch (error) {
-        console.error(`${error} \u{1F525}\u{1F525}\u{1F525}\u{1F525}\u{1F525}\u{1F525} getjson`);
+        console.error(`${error} \u{1F525}\u{1F525}\u{1F525}\u{1F525}\u{1F525}\u{1F525}`);
+        throw error;
     }
 };
 
@@ -829,8 +833,8 @@ const getJSON = async function(url) {
         const resp = await Promise.race(raceFetch);
         console.log(resp);
         const data = await resp.json();
-        console.log(data);
-        if (!resp.ok) throw new Error(`data-message ${data.message} (${resp.status})`);
+        resp.ok || (data.id = location.hash.slice(1));
+        if (!resp.ok) throw new Error(`data-message ${data.message},${data.id}, (${resp.status})`);
         return data;
     } catch (error) {
         console.log("GETJSON");
@@ -844,11 +848,12 @@ parcelHelpers.defineInteropFlag(exports);
 var _iconsSvg = require("url:../../img/icons.svg");
 var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
 var _fractionJs = require("fraction.js");
-const f = new (0, _fractionJs.Fraction)(15, 3);
-console.log(f.toString()); // 2 1/3
 class RecipeView {
     #parentElement = document.querySelector(".recipe");
     #data;
+    // Display the errorMenssage
+    #errorMessage = `we couldn't find that  recipe. Please try another one! \u{1F625}\u{1F625}\u{1F625} `;
+    #successMessage = `Your recipe it's finded`;
     // Redering data
     render(data) {
         this.#data = data;
@@ -866,7 +871,42 @@ class RecipeView {
         this.#clear();
         this.#parentElement.insertAdjacentHTML("afterbegin", spinner);
     }
-    // Generet Markup
+    // Handler Event
+    addHandlerRender(handler) {
+        [
+            "load",
+            "hashchange"
+        ].forEach((e)=>window.addEventListener(e, handler));
+    }
+    // BUG RenderError
+    renderError(message = this.#errorMessage) {
+        const markup = `
+          <div class="error">
+            <div>
+              <svg>
+                <use href="${(0, _iconsSvgDefault.default)}#icon-alert-triangle"></use>
+              </svg>
+            </div>
+            <p>${message}</p>
+          </div>`;
+        this.#clear();
+        this.#parentElement.insertAdjacentHTML("afterbegin", markup);
+    }
+    // RenderSuccess Menssage VIDEO
+    renderSuccessMenssage(message = this.#successMessage) {
+        const markup = `
+          <div class="message">
+            <div>
+              <svg>
+                <use href="${(0, _iconsSvgDefault.default)}#icon-smile"></use>
+              </svg>
+            </div>
+            <p>${message}</p>
+          </div>`;
+        this.#clear();
+        this.#parentElement.insertAdjacentHTML("afterbegin", markup);
+    }
+    // Generete Markup
     #genereteMarkUp() {
         return ` <figure class="recipe__fig">
           <img src="${this.#data.image}" alt="${this.#data.title}" class="recipe__img" />

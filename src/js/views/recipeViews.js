@@ -1,11 +1,12 @@
 import icons from "url:../../img/icons.svg";
 import { Fraction } from "fraction.js";
 
-const f = new Fraction(15, 3);
-console.log(f.toString()); // 2 1/3
 class RecipeView {
   #parentElement = document.querySelector(".recipe");
   #data;
+  // Display the errorMenssage
+  #errorMessage = `we couldn't find that  recipe. Please try another one! 😥😥😥 `;
+  #successMessage = `Your recipe it's finded`;
   // Redering data
   render(data) {
     this.#data = data;
@@ -23,7 +24,39 @@ class RecipeView {
     this.#clear();
     this.#parentElement.insertAdjacentHTML("afterbegin", spinner);
   }
-  // Generet Markup
+  // Handler Event
+  addHandlerRender(handler) {
+    ["load", "hashchange"].forEach((e) => window.addEventListener(e, handler));
+  }
+  // BUG RenderError
+  renderError(message = this.#errorMessage) {
+    const markup = `
+          <div class="error">
+            <div>
+              <svg>
+                <use href="${icons}#icon-alert-triangle"></use>
+              </svg>
+            </div>
+            <p>${message}</p>
+          </div>`;
+    this.#clear();
+    this.#parentElement.insertAdjacentHTML("afterbegin", markup);
+  }
+  // RenderSuccess Menssage VIDEO
+  renderSuccessMenssage(message = this.#successMessage) {
+    const markup = `
+          <div class="message">
+            <div>
+              <svg>
+                <use href="${icons}#icon-smile"></use>
+              </svg>
+            </div>
+            <p>${message}</p>
+          </div>`;
+    this.#clear();
+    this.#parentElement.insertAdjacentHTML("afterbegin", markup);
+  }
+  // Generete Markup
   #genereteMarkUp() {
     return ` <figure class="recipe__fig">
           <img src="${this.#data.image}" alt="${this.#data.title}" class="recipe__img" />

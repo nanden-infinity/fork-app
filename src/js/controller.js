@@ -12,15 +12,20 @@ const controlRecipe = async function () {
   try {
     if (!id) return;
     recipeViews.renderSpinner();
-    // 1) Loading recipe
+    // 1)"" Loading recipe
     await loadRecipe(id);
     // 2 Rendering recipe
     recipeViews.render(state.recipe);
   } catch (error) {
+    // calling the error methodo
+    recipeViews.renderError();
     console.log(`O seu erro ${error}`);
   }
 };
 
-["load", "hashchange"].forEach((e) =>
-  window.addEventListener(e, controlRecipe),
-);
+const init = function () {
+  // iniciando o app com a funcao init logo no inicio  TODO
+  recipeViews.addHandlerRender(controlRecipe);
+};
+
+init();
