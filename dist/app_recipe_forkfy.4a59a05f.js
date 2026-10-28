@@ -764,751 +764,7 @@ const init = function() {
 };
 init();
 
-},{"./modal.js":"jJ31c","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","./views/recipeView.js":"3wx5k","./views/resultsView.js":"kBQ4r","./views/searchView.js":"kbE4Z","core-js/modules/web.immediate.js":"bzsBv"}],"jJ31c":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "state", ()=>state);
-parcelHelpers.export(exports, "loadRecipe", ()=>loadRecipe);
-parcelHelpers.export(exports, "loadSearchResults", ()=>loadSearchResults);
-var _configJs = require("./config.js");
-var _helpersJs = require("./helpers.js");
-const state = {
-    recipe: {},
-    search: {
-        query: "",
-        results: []
-    }
-};
-const loadRecipe = async function(id) {
-    const url = `${(0, _configJs.endpoint)}${id}`;
-    try {
-        const { data } = await (0, _helpersJs.getJSON)(url);
-        const { recipe } = data;
-        state.recipe = {
-            id: recipe.id,
-            title: recipe.title,
-            publisher: recipe.publisher,
-            sourceUrl: recipe.source_url,
-            image: recipe.image_url,
-            servings: recipe.servings,
-            cookingTime: recipe.cooking_time,
-            ingredients: recipe.ingredients
-        };
-    } catch (error) {
-        console.error(`${error} \u{1F525}\u{1F525}\u{1F525}\u{1F525}\u{1F525}\u{1F525}`);
-        throw error;
-    }
-};
-const loadSearchResults = async function(query) {
-    try {
-        state.search.query = query;
-        const datarecipe = await (0, _helpersJs.getJSON)(`${(0, _configJs.endpoint)}?search=${query}`);
-        const { data: { recipes } } = datarecipe;
-        state.search.results = recipes.map((recipe)=>{
-            return recipe = {
-                id: recipe.id,
-                title: recipe.title,
-                publisher: recipe.publisher,
-                image: recipe.image_url
-            };
-        });
-        console.log(state.search);
-    } catch (error) {
-        console.log("Load faild");
-        throw error;
-    }
-};
-
-},{"./config.js":"2hPh4","./helpers.js":"7nL9P","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"2hPh4":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "endpoint", ()=>endpoint);
-parcelHelpers.export(exports, "TIMEOUT_SEC", ()=>TIMEOUT_SEC);
-const KEY = "b1aad4fb-a9e4-44af-ba68-86c4d71f8958";
-const endpoint = "https://forkify-api.jonas.io/api/v2/recipes/";
-const TIMEOUT_SEC = 10;
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"jnFvT":[function(require,module,exports,__globalThis) {
-exports.interopDefault = function(a) {
-    return a && a.__esModule ? a : {
-        default: a
-    };
-};
-exports.defineInteropFlag = function(a) {
-    Object.defineProperty(a, '__esModule', {
-        value: true
-    });
-};
-exports.exportAll = function(source, dest) {
-    Object.keys(source).forEach(function(key) {
-        if (key === 'default' || key === '__esModule' || Object.prototype.hasOwnProperty.call(dest, key)) return;
-        Object.defineProperty(dest, key, {
-            enumerable: true,
-            get: function() {
-                return source[key];
-            }
-        });
-    });
-    return dest;
-};
-exports.export = function(dest, destName, get) {
-    Object.defineProperty(dest, destName, {
-        enumerable: true,
-        get: get
-    });
-};
-
-},{}],"7nL9P":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "getJSON", ()=>getJSON);
-var _configJs = require("./config.js");
-const timeout = function(s) {
-    return new Promise(function(_, reject) {
-        setTimeout(function() {
-            reject(new Error(`Request took too long! Timeout after ${s} Time_out second`));
-        }, s * 1000);
-    });
-};
-const getJSON = async function(url) {
-    const raceFetch = [
-        fetch(url),
-        timeout((0, _configJs.TIMEOUT_SEC))
-    ];
-    try {
-        const resp = await Promise.race(raceFetch);
-        // console.log(resp);
-        const data = await resp.json();
-        resp.ok || (data.id = location.hash.slice(1));
-        if (!resp.ok) throw new Error(`data-message ${data.message},${data.id}, (${resp.status})`);
-        return data;
-    } catch (error) {
-        console.log("GETJSON");
-        throw error;
-    }
-};
-
-},{"./config.js":"2hPh4","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"3wx5k":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _iconsSvg = require("url:../../img/icons.svg");
-var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
-var _fractionJs = require("fraction.js");
-var _viewJs = require("./view.js");
-var _viewJsDefault = parcelHelpers.interopDefault(_viewJs);
-class RecipeView extends (0, _viewJsDefault.default) {
-    _parentElement = document.querySelector(".recipe");
-    // Handler Event
-    addHandlerRender(handler) {
-        [
-            "load",
-            "hashchange"
-        ].forEach((e)=>window.addEventListener(e, handler));
-    }
-    // Generete Markup
-    _generateMarkUp() {
-        console.log(this._data);
-        const html = ` <figure class="recipe__fig">
-          <img src="${this._data.image}" alt="${this._data.title}" class="recipe__img" />
-          <h1 class="recipe__title">
-            <span>${this._data.title}</span>
-          </h1>
-        </figure>
-
-        <div class="recipe__details">
-          <div class="recipe__info">
-            <svg class="recipe__info-icon">
-              <use href="${(0, _iconsSvgDefault.default)}#icon-clock"></use>
-            </svg>
-            <span class="recipe__info-data recipe__info-data--minutes">45</span>
-            <span class="recipe__info-text">minutes</span>
-          </div>
-          <div class="recipe__info">
-            <svg class="recipe__info-icon">
-              <use href="${(0, _iconsSvgDefault.default)}#icon-users"></use>
-            </svg>
-            <span class="recipe__info-data recipe__info-data--people">4</span>
-            <span class="recipe__info-text">servings</span>
-
-            <div class="recipe__info-buttons">
-              <button class="btn--tiny btn--increase-servings">
-                <svg>
-                  <use href="${(0, _iconsSvgDefault.default)}#icon-minus-circle"></use>
-                </svg>
-              </button>
-              <button class="btn--tiny btn--increase-servings">
-                <svg>
-                  <use href="${(0, _iconsSvgDefault.default)}#icon-plus-circle"></use>
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <button class="btn--round">
-            <svg class="">
-              <use href="${(0, _iconsSvgDefault.default)}#icon-bookmark"></use>
-            </svg>
-          </button>
-        </div>
-
-        <div class="recipe__ingredients">
-          <h2 class="heading--2">Recipe ingredients</h2>
-          <ul class="recipe__ingredient-list">
-              ${this._data.ingredients.map(this._genereteMarkupIngredient).join("")}
-          </ul>
-        </div>
-
-        <div class="recipe__directions">
-          <h2 class="heading--2">How to cook it</h2>
-          <p class="recipe__directions-text">
-            This recipe was carefully designed and tested by
-            <span class="recipe__publisher">${this._data.publisher}</span>. Please check out
-            directions at their website.
-          </p>
-          <a
-            class="btn--small recipe__btn"
-            href="http://thepioneerwoman.com/cooking/pasta-with-tomato-cream-sauce/"
-            target="_blank"
-          >
-            <span>Directions</span>
-            <svg class="search__icon">
-              <use href="${(0, _iconsSvgDefault.default)}#icon-arrow-right"></use>
-            </svg>
-          </a>
-        </div>`;
-        return html;
-    }
-    _genereteMarkupIngredient(ing) {
-        // console.log(ing);
-        const htmlIgre = `<li class="recipe__ingredient">
-               <svg class="recipe__icon">
-                 <use href="${(0, _iconsSvgDefault.default)}#icon-check"></use>
-              </svg>
-               <div class="recipe__quantity">
-              ${ing.quantity ? new (0, _fractionJs.Fraction)(ing.quantity / 2).toString() : "0 g"}
-              </div>
-              <div class="recipe__description">
-                <span class="recipe__unit">${ing.unit ?? "Kg"}</span>
-              </div>
-            </li>
-`;
-        return htmlIgre;
-    }
-}
-exports.default = new RecipeView();
-
-},{"url:../../img/icons.svg":"fd0vu","fraction.js":"md6n5","./view.js":"2kjY2","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"fd0vu":[function(require,module,exports,__globalThis) {
-module.exports = module.bundle.resolve("icons.0809ef97.svg") + "?" + Date.now();
-
-},{}],"md6n5":[function(require,module,exports,__globalThis) {
-/*
-Fraction.js v5.3.4 8/22/2025
-https://raw.org/article/rational-numbers-in-javascript/
-
-Copyright (c) 2025, Robert Eisele (https://raw.org/)
-Licensed under the MIT license.
-*/ 'use strict';
-(function(F) {
-    function D() {
-        return Error("Parameters must be integer");
-    }
-    function x() {
-        return Error("Invalid argument");
-    }
-    function C() {
-        return Error("Division by Zero");
-    }
-    function q(a, b) {
-        var d = g, c = h;
-        let f = h;
-        if (void 0 !== a && null !== a) {
-            if (void 0 !== b) {
-                if ("bigint" === typeof a) d = a;
-                else {
-                    if (isNaN(a)) throw x();
-                    if (0 !== a % 1) throw D();
-                    d = BigInt(a);
-                }
-                if ("bigint" === typeof b) c = b;
-                else {
-                    if (isNaN(b)) throw x();
-                    if (0 !== b % 1) throw D();
-                    c = BigInt(b);
-                }
-                f = d * c;
-            } else if ("object" === typeof a) {
-                if ("d" in a && "n" in a) d = BigInt(a.n), c = BigInt(a.d), "s" in a && (d *= BigInt(a.s));
-                else if (0 in a) d = BigInt(a[0]), 1 in a && (c = BigInt(a[1]));
-                else if ("bigint" === typeof a) d = a;
-                else throw x();
-                f = d * c;
-            } else if ("number" === typeof a) {
-                if (isNaN(a)) throw x();
-                0 > a && (f = -h, a = -a);
-                if (0 === a % 1) d = BigInt(a);
-                else {
-                    b = 1;
-                    var k = 0, l = 1, m = 1;
-                    let r = 1;
-                    1 <= a && (b = 10 ** Math.floor(1 + Math.log10(a)), a /= b);
-                    for(; 1E7 >= l && 1E7 >= r;)if (c = (k + m) / (l + r), a === c) {
-                        1E7 >= l + r ? (d = k + m, c = l + r) : r > l ? (d = m, c = r) : (d = k, c = l);
-                        break;
-                    } else a > c ? (k += m, l += r) : (m += k, r += l), 1E7 < l ? (d = m, c = r) : (d = k, c = l);
-                    d = BigInt(d) * BigInt(b);
-                    c = BigInt(c);
-                }
-            } else if ("string" === typeof a) {
-                c = 0;
-                k = b = d = g;
-                l = m = h;
-                a = a.replace(/_/g, "").match(/\d+|./g);
-                if (null === a) throw x();
-                "-" === a[c] ? (f = -h, c++) : "+" === a[c] && c++;
-                if (a.length === c + 1) b = w(a[c++], f);
-                else if ("." === a[c + 1] || "." === a[c]) {
-                    "." !== a[c] && (d = w(a[c++], f));
-                    c++;
-                    if (c + 1 === a.length || "(" === a[c + 1] && ")" === a[c + 3] || "'" === a[c + 1] && "'" === a[c + 3]) b = w(a[c], f), m = t ** BigInt(a[c].length), c++;
-                    if ("(" === a[c] && ")" === a[c + 2] || "'" === a[c] && "'" === a[c + 2]) k = w(a[c + 1], f), l = t ** BigInt(a[c + 1].length) - h, c += 3;
-                } else "/" === a[c + 1] || ":" === a[c + 1] ? (b = w(a[c], f), m = w(a[c + 2], h), c += 3) : "/" === a[c + 3] && " " === a[c + 1] && (d = w(a[c], f), b = w(a[c + 2], f), m = w(a[c + 4], h), c += 5);
-                if (a.length <= c) c = m * l, f = d = k + c * d + l * b;
-                else throw x();
-            } else if ("bigint" === typeof a) f = d = a, c = h;
-            else throw x();
-        }
-        if (c === g) throw C();
-        e.s = f < g ? -h : h;
-        e.n = d < g ? -d : d;
-        e.d = c < g ? -c : c;
-    }
-    function w(a, b) {
-        try {
-            a = BigInt(a);
-        } catch (d) {
-            throw x();
-        }
-        return a * b;
-    }
-    function u(a) {
-        return "bigint" === typeof a ? a : Math.floor(a);
-    }
-    function n(a, b) {
-        if (b === g) throw C();
-        const d = Object.create(v.prototype);
-        d.s = a < g ? -h : h;
-        a = a < g ? -a : a;
-        const c = y(a, b);
-        d.n = a / c;
-        d.d = b / c;
-        return d;
-    }
-    function A(a) {
-        const b = Object.create(null);
-        if (a <= h) return b[a] = h, b;
-        for(; a % p === g;)b[p] = (b[p] || g) + h, a /= p;
-        for(; a % B === g;)b[B] = (b[B] || g) + h, a /= B;
-        for(; a % z === g;)b[z] = (b[z] || g) + h, a /= z;
-        for(let d = 0, c = p + z; c * c <= a;){
-            for(; a % c === g;)b[c] = (b[c] || g) + h, a /= c;
-            c += G[d];
-            d = d + 1 & 7;
-        }
-        a > h && (b[a] = (b[a] || g) + h);
-        return b;
-    }
-    function y(a, b) {
-        if (!a) return b;
-        if (!b) return a;
-        for(;;){
-            a %= b;
-            if (!a) return b;
-            b %= a;
-            if (!b) return a;
-        }
-    }
-    function v(a, b) {
-        q(a, b);
-        if (this instanceof v) a = y(e.d, e.n), this.s = e.s, this.n = e.n / a, this.d = e.d / a;
-        else return n(e.s * e.n, e.d);
-    }
-    "undefined" === typeof BigInt && (BigInt = function(a) {
-        if (isNaN(a)) throw Error("");
-        return a;
-    });
-    const g = BigInt(0), h = BigInt(1), p = BigInt(2), B = BigInt(3), z = BigInt(5), t = BigInt(10), e = {
-        s: h,
-        n: g,
-        d: h
-    }, G = [
-        p * p,
-        p,
-        p * p,
-        p,
-        p * p,
-        p * B,
-        p,
-        p * B
-    ];
-    v.prototype = {
-        s: h,
-        n: g,
-        d: h,
-        abs: function() {
-            return n(this.n, this.d);
-        },
-        neg: function() {
-            return n(-this.s * this.n, this.d);
-        },
-        add: function(a, b) {
-            q(a, b);
-            return n(this.s * this.n * e.d + e.s * this.d * e.n, this.d * e.d);
-        },
-        sub: function(a, b) {
-            q(a, b);
-            return n(this.s * this.n * e.d - e.s * this.d * e.n, this.d * e.d);
-        },
-        mul: function(a, b) {
-            q(a, b);
-            return n(this.s * e.s * this.n * e.n, this.d * e.d);
-        },
-        div: function(a, b) {
-            q(a, b);
-            return n(this.s * e.s * this.n * e.d, this.d * e.n);
-        },
-        clone: function() {
-            return n(this.s * this.n, this.d);
-        },
-        mod: function(a, b) {
-            if (void 0 === a) return n(this.s * this.n % this.d, h);
-            q(a, b);
-            if (g === e.n * this.d) throw C();
-            return n(this.s * e.d * this.n % (e.n * this.d), e.d * this.d);
-        },
-        gcd: function(a, b) {
-            q(a, b);
-            return n(y(e.n, this.n) * y(e.d, this.d), e.d * this.d);
-        },
-        lcm: function(a, b) {
-            q(a, b);
-            return e.n === g && this.n === g ? n(g, h) : n(e.n * this.n, y(e.n, this.n) * y(e.d, this.d));
-        },
-        inverse: function() {
-            return n(this.s * this.d, this.n);
-        },
-        pow: function(a, b) {
-            q(a, b);
-            if (e.d === h) return e.s < g ? n((this.s * this.d) ** e.n, this.n ** e.n) : n((this.s * this.n) ** e.n, this.d ** e.n);
-            if (this.s < g) return null;
-            a = A(this.n);
-            b = A(this.d);
-            let d = h, c = h;
-            for(let f in a)if ("1" !== f) {
-                if ("0" === f) {
-                    d = g;
-                    break;
-                }
-                a[f] *= e.n;
-                if (a[f] % e.d === g) a[f] /= e.d;
-                else return null;
-                d *= BigInt(f) ** a[f];
-            }
-            for(let f in b)if ("1" !== f) {
-                b[f] *= e.n;
-                if (b[f] % e.d === g) b[f] /= e.d;
-                else return null;
-                c *= BigInt(f) ** b[f];
-            }
-            return e.s < g ? n(c, d) : n(d, c);
-        },
-        log: function(a, b) {
-            q(a, b);
-            if (this.s <= g || e.s <= g) return null;
-            var d = Object.create(null);
-            a = A(e.n);
-            const c = A(e.d);
-            b = A(this.n);
-            const f = A(this.d);
-            for(var k in c)a[k] = (a[k] || g) - c[k];
-            for(var l in f)b[l] = (b[l] || g) - f[l];
-            for(var m in a)"1" !== m && (d[m] = !0);
-            for(var r in b)"1" !== r && (d[r] = !0);
-            l = k = null;
-            for(const E in d)if (m = a[E] || g, d = b[E] || g, m === g) {
-                if (d !== g) return null;
-            } else if (r = y(d, m), d /= r, m /= r, null === k && null === l) k = d, l = m;
-            else if (d * l !== k * m) return null;
-            return null !== k && null !== l ? n(k, l) : null;
-        },
-        equals: function(a, b) {
-            q(a, b);
-            return this.s * this.n * e.d === e.s * e.n * this.d;
-        },
-        lt: function(a, b) {
-            q(a, b);
-            return this.s * this.n * e.d < e.s * e.n * this.d;
-        },
-        lte: function(a, b) {
-            q(a, b);
-            return this.s * this.n * e.d <= e.s * e.n * this.d;
-        },
-        gt: function(a, b) {
-            q(a, b);
-            return this.s * this.n * e.d > e.s * e.n * this.d;
-        },
-        gte: function(a, b) {
-            q(a, b);
-            return this.s * this.n * e.d >= e.s * e.n * this.d;
-        },
-        compare: function(a, b) {
-            q(a, b);
-            a = this.s * this.n * e.d - e.s * e.n * this.d;
-            return (g < a) - (a < g);
-        },
-        ceil: function(a) {
-            a = t ** BigInt(a || 0);
-            return n(u(this.s * a * this.n / this.d) + (a * this.n % this.d > g && this.s >= g ? h : g), a);
-        },
-        floor: function(a) {
-            a = t ** BigInt(a || 0);
-            return n(u(this.s * a * this.n / this.d) - (a * this.n % this.d > g && this.s < g ? h : g), a);
-        },
-        round: function(a) {
-            a = t ** BigInt(a || 0);
-            return n(u(this.s * a * this.n / this.d) + this.s * ((this.s >= g ? h : g) + a * this.n % this.d * p > this.d ? h : g), a);
-        },
-        roundTo: function(a, b) {
-            q(a, b);
-            var d = this.n * e.d;
-            a = this.d * e.n;
-            b = d % a;
-            d = u(d / a);
-            b + b >= a && d++;
-            return n(this.s * d * e.n, e.d);
-        },
-        divisible: function(a, b) {
-            q(a, b);
-            return e.n === g ? !1 : this.n * e.d % (e.n * this.d) === g;
-        },
-        valueOf: function() {
-            return Number(this.s * this.n) / Number(this.d);
-        },
-        toString: function(a = 15) {
-            let b = this.n, d = this.d;
-            var c;
-            a: {
-                for(c = d; c % p === g; c /= p);
-                for(; c % z === g; c /= z);
-                if (c === h) c = g;
-                else {
-                    for(var f = t % c, k = 1; f !== h; k++)if (f = f * t % c, 2E3 < k) {
-                        c = g;
-                        break a;
-                    }
-                    c = BigInt(k);
-                }
-            }
-            a: {
-                f = h;
-                k = t;
-                var l = c;
-                let m = h;
-                for(; l > g; k = k * k % d, l >>= h)l & h && (m = m * k % d);
-                k = m;
-                for(l = 0; 300 > l; l++){
-                    if (f === k) {
-                        f = BigInt(l);
-                        break a;
-                    }
-                    f = f * t % d;
-                    k = k * t % d;
-                }
-                f = 0;
-            }
-            k = f;
-            f = this.s < g ? "-" : "";
-            f += u(b / d);
-            (b = b % d * t) && (f += ".");
-            if (c) {
-                for(a = k; a--;)f += u(b / d), b %= d, b *= t;
-                f += "(";
-                for(a = c; a--;)f += u(b / d), b %= d, b *= t;
-                f += ")";
-            } else for(; b && a--;)f += u(b / d), b %= d, b *= t;
-            return f;
-        },
-        toFraction: function(a = !1) {
-            let b = this.n, d = this.d, c = this.s < g ? "-" : "";
-            if (d === h) c += b;
-            else {
-                const f = u(b / d);
-                a && f > g && (c += f, c += " ", b %= d);
-                c = c + b + "/" + d;
-            }
-            return c;
-        },
-        toLatex: function(a = !1) {
-            let b = this.n, d = this.d, c = this.s < g ? "-" : "";
-            if (d === h) c += b;
-            else {
-                const f = u(b / d);
-                a && f > g && (c += f, b %= d);
-                c = c + "\\frac{" + b + "}{" + d;
-                c += "}";
-            }
-            return c;
-        },
-        toContinued: function() {
-            let a = this.n, b = this.d;
-            const d = [];
-            for(; b;){
-                d.push(u(a / b));
-                const c = a % b;
-                a = b;
-                b = c;
-            }
-            return d;
-        },
-        simplify: function(a = .001) {
-            a = BigInt(Math.ceil(1 / a));
-            const b = this.abs(), d = b.toContinued();
-            for(let f = 1; f < d.length; f++){
-                let k = n(d[f - 1], h);
-                for(var c = f - 2; 0 <= c; c--)k = k.inverse().add(d[c]);
-                c = k.sub(b);
-                if (c.n * a < c.d) return k.mul(this.s);
-            }
-            return this;
-        }
-    };
-    "function" === typeof define && define.amd ? define([], function() {
-        return v;
-    }) : (Object.defineProperty(v, "__esModule", {
-        value: !0
-    }), v["default"] = v, v.Fraction = v, module.exports = v);
-})(this);
-
-},{}],"2kjY2":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _iconsSvg = require("url:../../img/icons.svg");
-var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
-class View {
-    _data;
-    // Display the errorMenssage
-    _errorMessage = `we couldn't find that  recipe. Please try another one! \u{1F625}\u{1F625}\u{1F625} `;
-    _successMessage = `Your recipe it's finded`;
-    render(data) {
-        if (!data || Array.isArray(data) && data.length === 0) return this.renderError();
-        // console.log(data);
-        this._data = data;
-        const markUp = this._generateMarkUp();
-        console.log(markUp);
-        this._clear();
-        this._parentElement.insertAdjacentHTML("afterbegin", markUp);
-    }
-    // Load Spinner
-    renderSpinner() {
-        const spinner = `<div class="spinner">
-            <svg>
-              <use href="${(0, _iconsSvgDefault.default)}#icon-loader"></use>
-            </svg>
-          </div>`;
-        this._clear();
-        this._parentElement.insertAdjacentHTML("afterbegin", spinner);
-    }
-    // BUG RenderError
-    renderError(message = this._errorMessage) {
-        const markup = `
-          <div class="error">
-            <div>
-              <svg>
-                <use href="${(0, _iconsSvgDefault.default)}#icon-alert-triangle"></use>
-              </svg>
-            </div>
-            <p>${message}</p>
-          </div>`;
-        this._clear();
-        this._parentElement.insertAdjacentHTML("afterbegin", markup);
-    }
-    // RenderSuccess Menssage VIDEO
-    renderSuccessMenssage(message = this._successMessage) {
-        const markup = `
-          <div class="message">
-            <div>
-              <svg>
-                <use href="${(0, _iconsSvgDefault.default)}#icon-smile"></use>
-              </svg>
-            </div>
-            <p>${message}</p>
-          </div>`;
-        this._clear();
-        this._parentElement.insertAdjacentHTML("afterbegin", markup);
-    }
-    // Clear ParentElement Recipe
-    _clear() {
-        this._parentElement.innerHTML = "";
-    }
-}
-exports.default = View;
-
-},{"url:../../img/icons.svg":"fd0vu","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"kBQ4r":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _iconsSvg = require("url:../../img/icons.svg");
-var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
-var _viewJs = require("./view.js");
-var _viewJsDefault = parcelHelpers.interopDefault(_viewJs);
-class ResultsViews extends (0, _viewJsDefault.default) {
-    _parentElement = document.querySelector(".results");
-    _errorMessage = "No recipe found for your query! plesase try again :)";
-    _generateMarkUp() {
-        return this._data.map(this._generateMarkUpPreview).join("");
-    }
-    _generateMarkUpPreview(result) {
-        const markup = `
-        <li class="preview">
-           <a class="preview__link  ${result.id === location.hash.slice(1) ? "preview__link--active" : ""}" href="#${result.id}">
-             <figure class="preview__fig">
-               <img src="${result.image}" alt="${result.title}" />
-             </figure>
-             <div class="preview__data">
-               <h4 class="preview__title">${result.title}</h4>
-               <p class="preview__publisher">${result.publisher}</p>
-            </div>
-           </a>
-        </li>`;
-        return markup;
-    }
-}
-exports.default = new ResultsViews();
-
-},{"url:../../img/icons.svg":"fd0vu","./view.js":"2kjY2","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"kbE4Z":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-class SearchView {
-    #parantElement = document.querySelector(".search");
-    addHandlerSearch(handler) {
-        this.#parantElement.addEventListener("submit", (e)=>{
-            e.preventDefault();
-            this.getInput();
-            handler();
-            this._clearInput();
-        });
-    }
-    getInput() {
-        const input = this.#parantElement.querySelector(".search__field");
-        const inputValue = input.value;
-        // input.value = "";
-        return inputValue;
-    }
-    _clearInput() {
-        this.#parantElement.querySelector(".search__field").value = "";
-    }
-}
-exports.default = new SearchView();
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"bzsBv":[function(require,module,exports,__globalThis) {
+},{"core-js/modules/web.immediate.js":"bzsBv","./views/recipeView.js":"3wx5k","./views/resultsView.js":"kBQ4r","./views/searchView.js":"kbE4Z","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","./modal.js":"jJ31c"}],"bzsBv":[function(require,module,exports,__globalThis) {
 'use strict';
 // TODO: Remove this module from `core-js@4` since it's split to modules listed below
 require("52e9b3eefbbce1ed");
@@ -2762,6 +2018,750 @@ module.exports = function(scheduler, hasTimeArg) {
     } : scheduler;
 };
 
-},{"aa6765693e58a0fe":"6xMjU","a68ecfcbf29c46f6":"9A5Vw","7087588d33667af2":"2KfBB","864edee099e8affb":"k2Sud","3a3a5a2cfab86f21":"qxRHs","cff2c830bdea4f24":"kGYHC","58a74f00cee1ac64":"elQJL"}]},["5DuvQ","7dWZ8"], "7dWZ8", "parcelRequire065b", {}, "./", "/")
+},{"aa6765693e58a0fe":"6xMjU","a68ecfcbf29c46f6":"9A5Vw","7087588d33667af2":"2KfBB","864edee099e8affb":"k2Sud","3a3a5a2cfab86f21":"qxRHs","cff2c830bdea4f24":"kGYHC","58a74f00cee1ac64":"elQJL"}],"3wx5k":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _iconsSvg = require("url:../../img/icons.svg");
+var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
+var _fractionJs = require("fraction.js");
+var _viewJs = require("./view.js");
+var _viewJsDefault = parcelHelpers.interopDefault(_viewJs);
+class RecipeView extends (0, _viewJsDefault.default) {
+    _parentElement = document.querySelector(".recipe");
+    // Handler Event
+    addHandlerRender(handler) {
+        [
+            "load",
+            "hashchange"
+        ].forEach((e)=>window.addEventListener(e, handler));
+    }
+    // Generete Markup
+    _generateMarkUp() {
+        console.log(this._data);
+        const html = ` <figure class="recipe__fig">
+          <img src="${this._data.image}" alt="${this._data.title}" class="recipe__img" />
+          <h1 class="recipe__title">
+            <span>${this._data.title}</span>
+          </h1>
+        </figure>
+
+        <div class="recipe__details">
+          <div class="recipe__info">
+            <svg class="recipe__info-icon">
+              <use href="${(0, _iconsSvgDefault.default)}#icon-clock"></use>
+            </svg>
+            <span class="recipe__info-data recipe__info-data--minutes">45</span>
+            <span class="recipe__info-text">minutes</span>
+          </div>
+          <div class="recipe__info">
+            <svg class="recipe__info-icon">
+              <use href="${(0, _iconsSvgDefault.default)}#icon-users"></use>
+            </svg>
+            <span class="recipe__info-data recipe__info-data--people">4</span>
+            <span class="recipe__info-text">servings</span>
+
+            <div class="recipe__info-buttons">
+              <button class="btn--tiny btn--increase-servings">
+                <svg>
+                  <use href="${(0, _iconsSvgDefault.default)}#icon-minus-circle"></use>
+                </svg>
+              </button>
+              <button class="btn--tiny btn--increase-servings">
+                <svg>
+                  <use href="${(0, _iconsSvgDefault.default)}#icon-plus-circle"></use>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <button class="btn--round">
+            <svg class="">
+              <use href="${(0, _iconsSvgDefault.default)}#icon-bookmark"></use>
+            </svg>
+          </button>
+        </div>
+
+        <div class="recipe__ingredients">
+          <h2 class="heading--2">Recipe ingredients</h2>
+          <ul class="recipe__ingredient-list">
+              ${this._data.ingredients.map(this._genereteMarkupIngredient).join("")}
+          </ul>
+        </div>
+
+        <div class="recipe__directions">
+          <h2 class="heading--2">How to cook it</h2>
+          <p class="recipe__directions-text">
+            This recipe was carefully designed and tested by
+            <span class="recipe__publisher">${this._data.publisher}</span>. Please check out
+            directions at their website.
+          </p>
+          <a
+            class="btn--small recipe__btn"
+            href="http://thepioneerwoman.com/cooking/pasta-with-tomato-cream-sauce/"
+            target="_blank"
+          >
+            <span>Directions</span>
+            <svg class="search__icon">
+              <use href="${(0, _iconsSvgDefault.default)}#icon-arrow-right"></use>
+            </svg>
+          </a>
+        </div>`;
+        return html;
+    }
+    _genereteMarkupIngredient(ing) {
+        // console.log(ing);
+        const htmlIgre = `<li class="recipe__ingredient">
+               <svg class="recipe__icon">
+                 <use href="${(0, _iconsSvgDefault.default)}#icon-check"></use>
+              </svg>
+               <div class="recipe__quantity">
+              ${ing.quantity ? new (0, _fractionJs.Fraction)(ing.quantity / 2).toString() : "0 g"}
+              </div>
+              <div class="recipe__description">
+                <span class="recipe__unit">${ing.unit ?? "Kg"}</span>
+              </div>
+            </li>
+`;
+        return htmlIgre;
+    }
+}
+exports.default = new RecipeView();
+
+},{"url:../../img/icons.svg":"fd0vu","fraction.js":"md6n5","./view.js":"2kjY2","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"fd0vu":[function(require,module,exports,__globalThis) {
+module.exports = module.bundle.resolve("icons.0809ef97.svg") + "?" + Date.now();
+
+},{}],"md6n5":[function(require,module,exports,__globalThis) {
+/*
+Fraction.js v5.3.4 8/22/2025
+https://raw.org/article/rational-numbers-in-javascript/
+
+Copyright (c) 2025, Robert Eisele (https://raw.org/)
+Licensed under the MIT license.
+*/ 'use strict';
+(function(F) {
+    function D() {
+        return Error("Parameters must be integer");
+    }
+    function x() {
+        return Error("Invalid argument");
+    }
+    function C() {
+        return Error("Division by Zero");
+    }
+    function q(a, b) {
+        var d = g, c = h;
+        let f = h;
+        if (void 0 !== a && null !== a) {
+            if (void 0 !== b) {
+                if ("bigint" === typeof a) d = a;
+                else {
+                    if (isNaN(a)) throw x();
+                    if (0 !== a % 1) throw D();
+                    d = BigInt(a);
+                }
+                if ("bigint" === typeof b) c = b;
+                else {
+                    if (isNaN(b)) throw x();
+                    if (0 !== b % 1) throw D();
+                    c = BigInt(b);
+                }
+                f = d * c;
+            } else if ("object" === typeof a) {
+                if ("d" in a && "n" in a) d = BigInt(a.n), c = BigInt(a.d), "s" in a && (d *= BigInt(a.s));
+                else if (0 in a) d = BigInt(a[0]), 1 in a && (c = BigInt(a[1]));
+                else if ("bigint" === typeof a) d = a;
+                else throw x();
+                f = d * c;
+            } else if ("number" === typeof a) {
+                if (isNaN(a)) throw x();
+                0 > a && (f = -h, a = -a);
+                if (0 === a % 1) d = BigInt(a);
+                else {
+                    b = 1;
+                    var k = 0, l = 1, m = 1;
+                    let r = 1;
+                    1 <= a && (b = 10 ** Math.floor(1 + Math.log10(a)), a /= b);
+                    for(; 1E7 >= l && 1E7 >= r;)if (c = (k + m) / (l + r), a === c) {
+                        1E7 >= l + r ? (d = k + m, c = l + r) : r > l ? (d = m, c = r) : (d = k, c = l);
+                        break;
+                    } else a > c ? (k += m, l += r) : (m += k, r += l), 1E7 < l ? (d = m, c = r) : (d = k, c = l);
+                    d = BigInt(d) * BigInt(b);
+                    c = BigInt(c);
+                }
+            } else if ("string" === typeof a) {
+                c = 0;
+                k = b = d = g;
+                l = m = h;
+                a = a.replace(/_/g, "").match(/\d+|./g);
+                if (null === a) throw x();
+                "-" === a[c] ? (f = -h, c++) : "+" === a[c] && c++;
+                if (a.length === c + 1) b = w(a[c++], f);
+                else if ("." === a[c + 1] || "." === a[c]) {
+                    "." !== a[c] && (d = w(a[c++], f));
+                    c++;
+                    if (c + 1 === a.length || "(" === a[c + 1] && ")" === a[c + 3] || "'" === a[c + 1] && "'" === a[c + 3]) b = w(a[c], f), m = t ** BigInt(a[c].length), c++;
+                    if ("(" === a[c] && ")" === a[c + 2] || "'" === a[c] && "'" === a[c + 2]) k = w(a[c + 1], f), l = t ** BigInt(a[c + 1].length) - h, c += 3;
+                } else "/" === a[c + 1] || ":" === a[c + 1] ? (b = w(a[c], f), m = w(a[c + 2], h), c += 3) : "/" === a[c + 3] && " " === a[c + 1] && (d = w(a[c], f), b = w(a[c + 2], f), m = w(a[c + 4], h), c += 5);
+                if (a.length <= c) c = m * l, f = d = k + c * d + l * b;
+                else throw x();
+            } else if ("bigint" === typeof a) f = d = a, c = h;
+            else throw x();
+        }
+        if (c === g) throw C();
+        e.s = f < g ? -h : h;
+        e.n = d < g ? -d : d;
+        e.d = c < g ? -c : c;
+    }
+    function w(a, b) {
+        try {
+            a = BigInt(a);
+        } catch (d) {
+            throw x();
+        }
+        return a * b;
+    }
+    function u(a) {
+        return "bigint" === typeof a ? a : Math.floor(a);
+    }
+    function n(a, b) {
+        if (b === g) throw C();
+        const d = Object.create(v.prototype);
+        d.s = a < g ? -h : h;
+        a = a < g ? -a : a;
+        const c = y(a, b);
+        d.n = a / c;
+        d.d = b / c;
+        return d;
+    }
+    function A(a) {
+        const b = Object.create(null);
+        if (a <= h) return b[a] = h, b;
+        for(; a % p === g;)b[p] = (b[p] || g) + h, a /= p;
+        for(; a % B === g;)b[B] = (b[B] || g) + h, a /= B;
+        for(; a % z === g;)b[z] = (b[z] || g) + h, a /= z;
+        for(let d = 0, c = p + z; c * c <= a;){
+            for(; a % c === g;)b[c] = (b[c] || g) + h, a /= c;
+            c += G[d];
+            d = d + 1 & 7;
+        }
+        a > h && (b[a] = (b[a] || g) + h);
+        return b;
+    }
+    function y(a, b) {
+        if (!a) return b;
+        if (!b) return a;
+        for(;;){
+            a %= b;
+            if (!a) return b;
+            b %= a;
+            if (!b) return a;
+        }
+    }
+    function v(a, b) {
+        q(a, b);
+        if (this instanceof v) a = y(e.d, e.n), this.s = e.s, this.n = e.n / a, this.d = e.d / a;
+        else return n(e.s * e.n, e.d);
+    }
+    "undefined" === typeof BigInt && (BigInt = function(a) {
+        if (isNaN(a)) throw Error("");
+        return a;
+    });
+    const g = BigInt(0), h = BigInt(1), p = BigInt(2), B = BigInt(3), z = BigInt(5), t = BigInt(10), e = {
+        s: h,
+        n: g,
+        d: h
+    }, G = [
+        p * p,
+        p,
+        p * p,
+        p,
+        p * p,
+        p * B,
+        p,
+        p * B
+    ];
+    v.prototype = {
+        s: h,
+        n: g,
+        d: h,
+        abs: function() {
+            return n(this.n, this.d);
+        },
+        neg: function() {
+            return n(-this.s * this.n, this.d);
+        },
+        add: function(a, b) {
+            q(a, b);
+            return n(this.s * this.n * e.d + e.s * this.d * e.n, this.d * e.d);
+        },
+        sub: function(a, b) {
+            q(a, b);
+            return n(this.s * this.n * e.d - e.s * this.d * e.n, this.d * e.d);
+        },
+        mul: function(a, b) {
+            q(a, b);
+            return n(this.s * e.s * this.n * e.n, this.d * e.d);
+        },
+        div: function(a, b) {
+            q(a, b);
+            return n(this.s * e.s * this.n * e.d, this.d * e.n);
+        },
+        clone: function() {
+            return n(this.s * this.n, this.d);
+        },
+        mod: function(a, b) {
+            if (void 0 === a) return n(this.s * this.n % this.d, h);
+            q(a, b);
+            if (g === e.n * this.d) throw C();
+            return n(this.s * e.d * this.n % (e.n * this.d), e.d * this.d);
+        },
+        gcd: function(a, b) {
+            q(a, b);
+            return n(y(e.n, this.n) * y(e.d, this.d), e.d * this.d);
+        },
+        lcm: function(a, b) {
+            q(a, b);
+            return e.n === g && this.n === g ? n(g, h) : n(e.n * this.n, y(e.n, this.n) * y(e.d, this.d));
+        },
+        inverse: function() {
+            return n(this.s * this.d, this.n);
+        },
+        pow: function(a, b) {
+            q(a, b);
+            if (e.d === h) return e.s < g ? n((this.s * this.d) ** e.n, this.n ** e.n) : n((this.s * this.n) ** e.n, this.d ** e.n);
+            if (this.s < g) return null;
+            a = A(this.n);
+            b = A(this.d);
+            let d = h, c = h;
+            for(let f in a)if ("1" !== f) {
+                if ("0" === f) {
+                    d = g;
+                    break;
+                }
+                a[f] *= e.n;
+                if (a[f] % e.d === g) a[f] /= e.d;
+                else return null;
+                d *= BigInt(f) ** a[f];
+            }
+            for(let f in b)if ("1" !== f) {
+                b[f] *= e.n;
+                if (b[f] % e.d === g) b[f] /= e.d;
+                else return null;
+                c *= BigInt(f) ** b[f];
+            }
+            return e.s < g ? n(c, d) : n(d, c);
+        },
+        log: function(a, b) {
+            q(a, b);
+            if (this.s <= g || e.s <= g) return null;
+            var d = Object.create(null);
+            a = A(e.n);
+            const c = A(e.d);
+            b = A(this.n);
+            const f = A(this.d);
+            for(var k in c)a[k] = (a[k] || g) - c[k];
+            for(var l in f)b[l] = (b[l] || g) - f[l];
+            for(var m in a)"1" !== m && (d[m] = !0);
+            for(var r in b)"1" !== r && (d[r] = !0);
+            l = k = null;
+            for(const E in d)if (m = a[E] || g, d = b[E] || g, m === g) {
+                if (d !== g) return null;
+            } else if (r = y(d, m), d /= r, m /= r, null === k && null === l) k = d, l = m;
+            else if (d * l !== k * m) return null;
+            return null !== k && null !== l ? n(k, l) : null;
+        },
+        equals: function(a, b) {
+            q(a, b);
+            return this.s * this.n * e.d === e.s * e.n * this.d;
+        },
+        lt: function(a, b) {
+            q(a, b);
+            return this.s * this.n * e.d < e.s * e.n * this.d;
+        },
+        lte: function(a, b) {
+            q(a, b);
+            return this.s * this.n * e.d <= e.s * e.n * this.d;
+        },
+        gt: function(a, b) {
+            q(a, b);
+            return this.s * this.n * e.d > e.s * e.n * this.d;
+        },
+        gte: function(a, b) {
+            q(a, b);
+            return this.s * this.n * e.d >= e.s * e.n * this.d;
+        },
+        compare: function(a, b) {
+            q(a, b);
+            a = this.s * this.n * e.d - e.s * e.n * this.d;
+            return (g < a) - (a < g);
+        },
+        ceil: function(a) {
+            a = t ** BigInt(a || 0);
+            return n(u(this.s * a * this.n / this.d) + (a * this.n % this.d > g && this.s >= g ? h : g), a);
+        },
+        floor: function(a) {
+            a = t ** BigInt(a || 0);
+            return n(u(this.s * a * this.n / this.d) - (a * this.n % this.d > g && this.s < g ? h : g), a);
+        },
+        round: function(a) {
+            a = t ** BigInt(a || 0);
+            return n(u(this.s * a * this.n / this.d) + this.s * ((this.s >= g ? h : g) + a * this.n % this.d * p > this.d ? h : g), a);
+        },
+        roundTo: function(a, b) {
+            q(a, b);
+            var d = this.n * e.d;
+            a = this.d * e.n;
+            b = d % a;
+            d = u(d / a);
+            b + b >= a && d++;
+            return n(this.s * d * e.n, e.d);
+        },
+        divisible: function(a, b) {
+            q(a, b);
+            return e.n === g ? !1 : this.n * e.d % (e.n * this.d) === g;
+        },
+        valueOf: function() {
+            return Number(this.s * this.n) / Number(this.d);
+        },
+        toString: function(a = 15) {
+            let b = this.n, d = this.d;
+            var c;
+            a: {
+                for(c = d; c % p === g; c /= p);
+                for(; c % z === g; c /= z);
+                if (c === h) c = g;
+                else {
+                    for(var f = t % c, k = 1; f !== h; k++)if (f = f * t % c, 2E3 < k) {
+                        c = g;
+                        break a;
+                    }
+                    c = BigInt(k);
+                }
+            }
+            a: {
+                f = h;
+                k = t;
+                var l = c;
+                let m = h;
+                for(; l > g; k = k * k % d, l >>= h)l & h && (m = m * k % d);
+                k = m;
+                for(l = 0; 300 > l; l++){
+                    if (f === k) {
+                        f = BigInt(l);
+                        break a;
+                    }
+                    f = f * t % d;
+                    k = k * t % d;
+                }
+                f = 0;
+            }
+            k = f;
+            f = this.s < g ? "-" : "";
+            f += u(b / d);
+            (b = b % d * t) && (f += ".");
+            if (c) {
+                for(a = k; a--;)f += u(b / d), b %= d, b *= t;
+                f += "(";
+                for(a = c; a--;)f += u(b / d), b %= d, b *= t;
+                f += ")";
+            } else for(; b && a--;)f += u(b / d), b %= d, b *= t;
+            return f;
+        },
+        toFraction: function(a = !1) {
+            let b = this.n, d = this.d, c = this.s < g ? "-" : "";
+            if (d === h) c += b;
+            else {
+                const f = u(b / d);
+                a && f > g && (c += f, c += " ", b %= d);
+                c = c + b + "/" + d;
+            }
+            return c;
+        },
+        toLatex: function(a = !1) {
+            let b = this.n, d = this.d, c = this.s < g ? "-" : "";
+            if (d === h) c += b;
+            else {
+                const f = u(b / d);
+                a && f > g && (c += f, b %= d);
+                c = c + "\\frac{" + b + "}{" + d;
+                c += "}";
+            }
+            return c;
+        },
+        toContinued: function() {
+            let a = this.n, b = this.d;
+            const d = [];
+            for(; b;){
+                d.push(u(a / b));
+                const c = a % b;
+                a = b;
+                b = c;
+            }
+            return d;
+        },
+        simplify: function(a = .001) {
+            a = BigInt(Math.ceil(1 / a));
+            const b = this.abs(), d = b.toContinued();
+            for(let f = 1; f < d.length; f++){
+                let k = n(d[f - 1], h);
+                for(var c = f - 2; 0 <= c; c--)k = k.inverse().add(d[c]);
+                c = k.sub(b);
+                if (c.n * a < c.d) return k.mul(this.s);
+            }
+            return this;
+        }
+    };
+    "function" === typeof define && define.amd ? define([], function() {
+        return v;
+    }) : (Object.defineProperty(v, "__esModule", {
+        value: !0
+    }), v["default"] = v, v.Fraction = v, module.exports = v);
+})(this);
+
+},{}],"2kjY2":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _iconsSvg = require("url:../../img/icons.svg");
+var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
+class View {
+    _data;
+    // Display the errorMenssage
+    _errorMessage = `we couldn't find that  recipe. Please try another one! \u{1F625}\u{1F625}\u{1F625} `;
+    _successMessage = `Your recipe it's finded`;
+    render(data) {
+        if (!data || Array.isArray(data) && data.length === 0) return this.renderError();
+        // console.log(data);
+        this._data = data;
+        const markUp = this._generateMarkUp();
+        console.log(markUp);
+        this._clear();
+        this._parentElement.insertAdjacentHTML("afterbegin", markUp);
+    }
+    // Load Spinner
+    renderSpinner() {
+        const spinner = `<div class="spinner">
+            <svg>
+              <use href="${(0, _iconsSvgDefault.default)}#icon-loader"></use>
+            </svg>
+          </div>`;
+        this._clear();
+        this._parentElement.insertAdjacentHTML("afterbegin", spinner);
+    }
+    // BUG RenderError
+    renderError(message = this._errorMessage) {
+        const markup = `
+          <div class="error">
+            <div>
+              <svg>
+                <use href="${(0, _iconsSvgDefault.default)}#icon-alert-triangle"></use>
+              </svg>
+            </div>
+            <p>${message}</p>
+          </div>`;
+        this._clear();
+        this._parentElement.insertAdjacentHTML("afterbegin", markup);
+    }
+    // RenderSuccess Menssage VIDEO
+    renderSuccessMenssage(message = this._successMessage) {
+        const markup = `
+          <div class="message">
+            <div>
+              <svg>
+                <use href="${(0, _iconsSvgDefault.default)}#icon-smile"></use>
+              </svg>
+            </div>
+            <p>${message}</p>
+          </div>`;
+        this._clear();
+        this._parentElement.insertAdjacentHTML("afterbegin", markup);
+    }
+    // Clear ParentElement Recipe
+    _clear() {
+        this._parentElement.innerHTML = "";
+    }
+}
+exports.default = View;
+
+},{"url:../../img/icons.svg":"fd0vu","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"jnFvT":[function(require,module,exports,__globalThis) {
+exports.interopDefault = function(a) {
+    return a && a.__esModule ? a : {
+        default: a
+    };
+};
+exports.defineInteropFlag = function(a) {
+    Object.defineProperty(a, '__esModule', {
+        value: true
+    });
+};
+exports.exportAll = function(source, dest) {
+    Object.keys(source).forEach(function(key) {
+        if (key === 'default' || key === '__esModule' || Object.prototype.hasOwnProperty.call(dest, key)) return;
+        Object.defineProperty(dest, key, {
+            enumerable: true,
+            get: function() {
+                return source[key];
+            }
+        });
+    });
+    return dest;
+};
+exports.export = function(dest, destName, get) {
+    Object.defineProperty(dest, destName, {
+        enumerable: true,
+        get: get
+    });
+};
+
+},{}],"kBQ4r":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _iconsSvg = require("url:../../img/icons.svg");
+var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
+var _viewJs = require("./view.js");
+var _viewJsDefault = parcelHelpers.interopDefault(_viewJs);
+class ResultsViews extends (0, _viewJsDefault.default) {
+    _parentElement = document.querySelector(".results");
+    _errorMessage = "No recipe found for your query! plesase try again :)";
+    _generateMarkUp() {
+        return this._data.map(this._generateMarkUpPreview).join("");
+    }
+    _generateMarkUpPreview(result) {
+        const markup = `
+        <li class="preview">
+           <a class="preview__link  ${result.id === location.hash.slice(1) ? "preview__link--active" : ""}" href="#${result.id}">
+             <figure class="preview__fig">
+               <img src="${result.image}" alt="${result.title}" />
+             </figure>
+             <div class="preview__data">
+               <h4 class="preview__title">${result.title}</h4>
+               <p class="preview__publisher">${result.publisher}</p>
+            </div>
+           </a>
+        </li>`;
+        return markup;
+    }
+}
+exports.default = new ResultsViews();
+
+},{"url:../../img/icons.svg":"fd0vu","./view.js":"2kjY2","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"kbE4Z":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+class SearchView {
+    #parantElement = document.querySelector(".search");
+    addHandlerSearch(handler) {
+        this.#parantElement.addEventListener("submit", (e)=>{
+            e.preventDefault();
+            this.getInput();
+            handler();
+            this._clearInput();
+        });
+    }
+    getInput() {
+        const input = this.#parantElement.querySelector(".search__field");
+        const inputValue = input.value;
+        // input.value = "";
+        return inputValue;
+    }
+    _clearInput() {
+        this.#parantElement.querySelector(".search__field").value = "";
+    }
+}
+exports.default = new SearchView();
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"jJ31c":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "state", ()=>state);
+parcelHelpers.export(exports, "loadRecipe", ()=>loadRecipe);
+parcelHelpers.export(exports, "loadSearchResults", ()=>loadSearchResults);
+var _configJs = require("./config.js");
+var _helpersJs = require("./helpers.js");
+const state = {
+    recipe: {},
+    search: {
+        query: "",
+        results: []
+    }
+};
+const loadRecipe = async function(id) {
+    const url = `${(0, _configJs.endpoint)}${id}`;
+    try {
+        const { data } = await (0, _helpersJs.getJSON)(url);
+        const { recipe } = data;
+        state.recipe = {
+            id: recipe.id,
+            title: recipe.title,
+            publisher: recipe.publisher,
+            sourceUrl: recipe.source_url,
+            image: recipe.image_url,
+            servings: recipe.servings,
+            cookingTime: recipe.cooking_time,
+            ingredients: recipe.ingredients
+        };
+    } catch (error) {
+        console.error(`${error} \u{1F525}\u{1F525}\u{1F525}\u{1F525}\u{1F525}\u{1F525}`);
+        throw error;
+    }
+};
+const loadSearchResults = async function(query) {
+    try {
+        state.search.query = query;
+        const datarecipe = await (0, _helpersJs.getJSON)(`${(0, _configJs.endpoint)}?search=${query}`);
+        const { data: { recipes } } = datarecipe;
+        state.search.results = recipes.map((recipe)=>{
+            return recipe = {
+                id: recipe.id,
+                title: recipe.title,
+                publisher: recipe.publisher,
+                image: recipe.image_url
+            };
+        });
+        console.log(state.search);
+    } catch (error) {
+        console.log("Load faild");
+        throw error;
+    }
+};
+
+},{"./config.js":"2hPh4","./helpers.js":"7nL9P","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"2hPh4":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "endpoint", ()=>endpoint);
+parcelHelpers.export(exports, "TIMEOUT_SEC", ()=>TIMEOUT_SEC);
+const KEY = "b1aad4fb-a9e4-44af-ba68-86c4d71f8958";
+const endpoint = "https://forkify-api.jonas.io/api/v2/recipes/";
+const TIMEOUT_SEC = 10;
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"7nL9P":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "getJSON", ()=>getJSON);
+var _configJs = require("./config.js");
+const timeout = function(s) {
+    return new Promise(function(_, reject) {
+        setTimeout(function() {
+            reject(new Error(`Request took too long! Timeout after ${s} Time_out second`));
+        }, s * 1000);
+    });
+};
+const getJSON = async function(url) {
+    const raceFetch = [
+        fetch(url),
+        timeout((0, _configJs.TIMEOUT_SEC))
+    ];
+    try {
+        const resp = await Promise.race(raceFetch);
+        // console.log(resp);
+        const data = await resp.json();
+        resp.ok || (data.id = location.hash.slice(1));
+        if (!resp.ok) throw new Error(`data-message ${data.message},${data.id}, (${resp.status})`);
+        return data;
+    } catch (error) {
+        console.log("GETJSON");
+        throw error;
+    }
+};
+
+},{"./config.js":"2hPh4","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}]},["5DuvQ","7dWZ8"], "7dWZ8", "parcelRequire065b", {}, "./", "/")
 
 //# sourceMappingURL=app_recipe_forkfy.4a59a05f.js.map
