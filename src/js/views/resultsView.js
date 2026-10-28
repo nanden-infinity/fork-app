@@ -3,28 +3,24 @@ import View from "./view.js";
 
 class ResultsViews extends View {
   _parentElement = document.querySelector(".results");
- 
+  _errorMessage = "No recipe found for your query! plesase try again :)";
   _generateMarkUp() {
-    return this._data
-      .map((recip) => {
-        return `<li class="preview">
-            <a class="preview__link preview__link--active" href="#${recip.id}">
-            <figure class="preview__fig">
-            <img src="${recip.image}" alt="Test" />
-            </figure>
-            <div class="preview__data">
-            <h4 class="preview__title">${recip.title}</h4>
-            <p class="preview__publisher">${recip.publisher}</p>
-            <div class="preview__user-generated">
-            <svg>
-            <use href="${icons}#icon-user"></use>
-            </svg>
+    return this._data.map(this._generateMarkUpPreview).join("");
+  }
+  _generateMarkUpPreview(result) {
+    const markup = `
+        <li class="preview">
+           <a class="preview__link  ${result.id === location.hash.slice(1) ? "preview__link--active" : ""}" href="#${result.id}">
+             <figure class="preview__fig">
+               <img src="${result.image}" alt="${result.title}" />
+             </figure>
+             <div class="preview__data">
+               <h4 class="preview__title">${result.title}</h4>
+               <p class="preview__publisher">${result.publisher}</p>
             </div>
-            </div>
-            </a>
-            </li>`;
-      })
-      .join("");
+           </a>
+        </li>`;
+    return markup;
   }
 }
 

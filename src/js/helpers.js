@@ -13,7 +13,7 @@ export const getJSON = async function (url) {
   const raceFetch = [fetch(url), timeout(TIMEOUT_SEC)];
   try {
     const resp = await Promise.race(raceFetch);
-    console.log(resp);
+    // console.log(resp);
     const data = await resp.json();
     resp.ok ? "" : (data.id = location.hash.slice(1));
     if (!resp.ok)

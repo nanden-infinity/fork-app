@@ -6,6 +6,7 @@ class SearchView {
       e.preventDefault();
       this.getInput();
       handler();
+      this._clearInput();
     });
   }
   getInput() {
@@ -15,7 +16,7 @@ class SearchView {
 
     return inputValue;
   }
-  clearInput() {
+  _clearInput() {
     this.#parantElement.querySelector(".search__field").value = "";
   }
 }

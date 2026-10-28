@@ -2,12 +2,17 @@ import { loadRecipe, state, loadSearchResults } from "./modal.js";
 import recipeViews from "./views/recipeView.js";
 import resultsView from "./views/resultsView.js";
 import searchView from "./views/searchView.js";
-
+import "core-js/stable";
+import "regenerator-runtime/runtime.js";
 // NEW API URL (instead of the one shown in the video)
 // https://forkify-api.jonas.io
 
 ///////////////////////////////////////
 
+// Initi hot module
+if (module.hot) {
+  module.hot.accept();
+}
 const controlRecipe = async function () {
   const id = location.hash.slice(1);
 
@@ -36,7 +41,7 @@ const controlSearchResults = async function () {
     //  Render Results
     resultsView.render(state.search.results);
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 };
 

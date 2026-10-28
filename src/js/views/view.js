@@ -7,9 +7,12 @@ export default class View {
   _successMessage = `Your recipe it's finded`;
 
   render(data) {
-    console.log(data);
+    if (!data || (Array.isArray(data) && data.length === 0))
+      return this.renderError();
+    // console.log(data);
     this._data = data;
     const markUp = this._generateMarkUp();
+    console.log(markUp);
     this._clear();
     this._parentElement.insertAdjacentHTML("afterbegin", markUp);
   }

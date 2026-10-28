@@ -49,11 +49,6 @@ class RecipeView extends View {
             </div>
           </div>
 
-          <div class="recipe__user-generated">
-            <svg>
-              <use href="${icons}#icon-user"></use>
-            </svg>
-          </div>
           <button class="btn--round">
             <svg class="">
               <use href="${icons}#icon-bookmark"></use>
@@ -89,7 +84,7 @@ class RecipeView extends View {
     return html;
   }
   _genereteMarkupIngredient(ing) {
-    console.log(ing);
+    // console.log(ing);
     const htmlIgre = `<li class="recipe__ingredient">
                <svg class="recipe__icon">
                  <use href="${icons}#icon-check"></use>
