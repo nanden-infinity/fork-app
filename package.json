@@ -19,5 +19,13 @@
   },
   "dependencies": {
     "fraction.js": "^5.3.4"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nanden-infinity/fork-app.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nanden-infinity/fork-app/issues"
+  },
+  "homepage": "https://github.com/nanden-infinity/fork-app#readme"
 }

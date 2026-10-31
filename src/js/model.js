@@ -5,7 +5,7 @@ export const state = {
   search: {
     query: "",
     results: [],
-    page: START_PAGE,
+    page: 1,
     resultPerPage: RES_PER_PAGE,
   },
 };
@@ -52,7 +52,6 @@ export const loadSearchResults = async function (query) {
         image: recipe.image_url,
       });
     });
-    console.log(state.search);
   } catch (error) {
     console.log("Load faild");
     throw error;
@@ -60,9 +59,9 @@ export const loadSearchResults = async function (query) {
 };
 
 export const getSearchResultsPage = function (page = state.search.page) {
-  console.log(page);
+  console.log(page, "PAGIE");
   const start = (page - 1) * state.search.resultPerPage;
   const end = page * state.search.resultPerPage;
-  const indexPage = state.search.results.slice(start, end);
-  return indexPage;
+  console.log(state.search.results);
+  return state.search.results.slice(start, end);
 };
