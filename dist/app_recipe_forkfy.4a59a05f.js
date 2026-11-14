@@ -778,7 +778,7 @@ const init = function() {
 };
 init();
 
-},{"core-js/modules/web.immediate.js":"bzsBv","./views/recipeView.js":"3wx5k","./views/resultsView.js":"kBQ4r","./views/searchView.js":"kbE4Z","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","./views/paginationView.js":"7NIiB","./model.js":"3QBkH"}],"bzsBv":[function(require,module,exports,__globalThis) {
+},{"core-js/modules/web.immediate.js":"bzsBv","./views/recipeView.js":"3wx5k","./views/resultsView.js":"kBQ4r","./views/searchView.js":"kbE4Z","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","./model.js":"3QBkH","./views/paginationView.js":"7NIiB"}],"bzsBv":[function(require,module,exports,__globalThis) {
 'use strict';
 // TODO: Remove this module from `core-js@4` since it's split to modules listed below
 require("52e9b3eefbbce1ed");
@@ -2679,66 +2679,7 @@ class SearchView {
 }
 exports.default = new SearchView();
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"7NIiB":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-var _iconsSvg = require("url:../../img/icons.svg");
-var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
-var _viewJs = require("./view.js");
-var _viewJsDefault = parcelHelpers.interopDefault(_viewJs);
-class PaginationView extends (0, _viewJsDefault.default) {
-    _parentElement = document.querySelector(".pagination");
-    addHandlerClik(handler) {
-        this._parentElement.addEventListener("click", function(e) {
-            const btn = e.target.closest(".btn--inline");
-            if (!btn) return;
-            const goToPage = +btn.dataset.goto;
-            handler(goToPage);
-        });
-    }
-    _generateMarkUp() {
-        const curPage = this._data.page;
-        const numPages = Math.ceil(this._data.results.length / this._data.resultsPerPage);
-        // Page 1, and there are other pages
-        if (curPage === 1 && numPages > 1) return `
-            <button data-goto="${curPage + 1}" class="btn--inline pagination__btn--next">
-              <span>Page ${curPage + 1}</span>
-              <svg class="search__icon">
-                <use href="${0, _iconsSvgDefault.default}#icon-arrow-right"></use>
-              </svg>
-            </button>
-          `;
-        // Last page
-        if (curPage === numPages && numPages > 1) return `
-            <button data-goto="${curPage - 1}" class="btn--inline pagination__btn--prev">
-              <svg class="search__icon">
-                <use href="${0, _iconsSvgDefault.default}#icon-arrow-left"></use>
-              </svg>
-              <span>Page ${curPage - 1}</span>
-            </button>
-          `;
-        // Other page
-        if (curPage < numPages) return `
-            <button data-goto="${curPage - 1}" class="btn--inline pagination__btn--prev">
-              <svg class="search__icon">
-                <use href="${0, _iconsSvgDefault.default}#icon-arrow-left"></use>
-              </svg>
-              <span>Page ${curPage - 1}</span>
-            </button>
-            <button data-goto="${curPage + 1}" class="btn--inline pagination__btn--next">
-              <span>Page ${curPage + 1}</span>
-              <svg class="search__icon">
-                <use href="${0, _iconsSvgDefault.default}#icon-arrow-right"></use>
-              </svg>
-            </button>
-          `;
-        // Page 1, and there are NO other pages
-        return "";
-    }
-}
-exports.default = new PaginationView();
-
-},{"./view.js":"2kjY2","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","url:../../img/icons.svg":"fd0vu"}],"3QBkH":[function(require,module,exports,__globalThis) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"3QBkH":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "state", ()=>state);
@@ -2845,6 +2786,65 @@ const getJSON = async function(url) {
     }
 };
 
-},{"./config.js":"2hPh4","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}]},["5DuvQ","7dWZ8"], "7dWZ8", "parcelRequire065b", {}, "./", "/")
+},{"./config.js":"2hPh4","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"7NIiB":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _iconsSvg = require("url:../../img/icons.svg");
+var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
+var _viewJs = require("./view.js");
+var _viewJsDefault = parcelHelpers.interopDefault(_viewJs);
+class PaginationView extends (0, _viewJsDefault.default) {
+    _parentElement = document.querySelector(".pagination");
+    addHandlerClik(handler) {
+        this._parentElement.addEventListener("click", function(e) {
+            const btn = e.target.closest(".btn--inline");
+            if (!btn) return;
+            const goToPage = +btn.dataset.goto;
+            handler(goToPage);
+        });
+    }
+    _generateMarkUp() {
+        const curPage = this._data.page;
+        const numPages = Math.ceil(this._data.results.length / this._data.resultsPerPage);
+        // Page 1, and there are other pages
+        if (curPage === 1 && numPages > 1) return `
+            <button data-goto="${curPage + 1}" class="btn--inline pagination__btn--next">
+              <span>Page ${curPage + 1}</span>
+              <svg class="search__icon">
+                <use href="${0, _iconsSvgDefault.default}#icon-arrow-right"></use>
+              </svg>
+            </button>
+          `;
+        // Last page
+        if (curPage === numPages && numPages > 1) return `
+            <button data-goto="${curPage - 1}" class="btn--inline pagination__btn--prev">
+              <svg class="search__icon">
+                <use href="${0, _iconsSvgDefault.default}#icon-arrow-left"></use>
+              </svg>
+              <span>Page ${curPage - 1}</span>
+            </button>
+          `;
+        // Other page
+        if (curPage < numPages) return `
+            <button data-goto="${curPage - 1}" class="btn--inline pagination__btn--prev">
+              <svg class="search__icon">
+                <use href="${0, _iconsSvgDefault.default}#icon-arrow-left"></use>
+              </svg>
+              <span>Page ${curPage - 1}</span>
+            </button>
+            <button data-goto="${curPage + 1}" class="btn--inline pagination__btn--next">
+              <span>Page ${curPage + 1}</span>
+              <svg class="search__icon">
+                <use href="${0, _iconsSvgDefault.default}#icon-arrow-right"></use>
+              </svg>
+            </button>
+          `;
+        // Page 1, and there are NO other pages
+        return "";
+    }
+}
+exports.default = new PaginationView();
+
+},{"url:../../img/icons.svg":"fd0vu","./view.js":"2kjY2","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}]},["5DuvQ","7dWZ8"], "7dWZ8", "parcelRequire065b", {}, "./", "/")
 
 //# sourceMappingURL=app_recipe_forkfy.4a59a05f.js.map
