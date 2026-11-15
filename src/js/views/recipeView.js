@@ -9,6 +9,23 @@ class RecipeView extends View {
   addHandlerRender(handler) {
     ["load", "hashchange"].forEach((e) => window.addEventListener(e, handler));
   }
+  addHandlerUpdateServings(handler) {
+    let index = 0;
+    this._parentElement.addEventListener("click", (e) => {
+      const btn = e.target.closest(".update-servings");
+      if (!btn) return;
+      let { updateTo } = btn.dataset;
+      // const istru = this._data.servings === 0;
+      // if (istru) this._data.servings = 4;
+
+      if (+updateTo <= 4) {
+        updateTo = 4;
+        e.stopPropagation();
+        btn.disabled = true;
+      }
+      handler(+updateTo);
+    });
+  }
 
   // Generete Markup
   _generateMarkUp() {
@@ -31,16 +48,16 @@ class RecipeView extends View {
             <svg class="recipe__info-icon">
               <use href="${icons}#icon-users"></use>
             </svg>
-            <span class="recipe__info-data recipe__info-data--people">4</span>
+            <span class="recipe__info-data recipe__info-data--people">${this._data.servings + 1}</span>
             <span class="recipe__info-text">servings</span>
 
             <div class="recipe__info-buttons">
-              <button class="btn--tiny btn--increase-servings">
+              <button class="btn--tiny  update-servings" data-update-to=${this._data.servings - 1}>
                 <svg>
                   <use href="${icons}#icon-minus-circle"></use>
                 </svg>
               </button>
-              <button class="btn--tiny btn--increase-servings">
+              <button class="btn--tiny  update-servings" data-update-to=${this._data.servings + 1}>
                 <svg>
                   <use href="${icons}#icon-plus-circle"></use>
                 </svg>
