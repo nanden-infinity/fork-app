@@ -716,6 +716,8 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 },{}],"7dWZ8":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _webImmediateJs = require("core-js/modules/web.immediate.js");
+var _bookmarkViewJs = require("./views/bookmarkView.js");
+var _bookmarkViewJsDefault = parcelHelpers.interopDefault(_bookmarkViewJs);
 var _modelJs = require("./model.js");
 var _searchViewJs = require("./views/searchView.js");
 var _searchViewJsDefault = parcelHelpers.interopDefault(_searchViewJs);
@@ -725,8 +727,6 @@ var _resultsViewJs = require("./views/resultsView.js");
 var _resultsViewJsDefault = parcelHelpers.interopDefault(_resultsViewJs);
 var _paginationViewJs = require("./views/paginationView.js");
 var _paginationViewJsDefault = parcelHelpers.interopDefault(_paginationViewJs);
-var _bookmarkViewJs = require("./views/BookmarkView.js");
-var _bookmarkViewJsDefault = parcelHelpers.interopDefault(_bookmarkViewJs);
 // NEW API URL (instead of the one shown in the video)
 // https://forkify-api.jonas.io
 ///////////////////////////////////////
@@ -741,15 +741,18 @@ const controlRecipe = async function() {
         if (!id) return;
         (0, _recipeViewJsDefault.default).renderSpinner();
         //  0 Results view update to 0 search results View to current
-        (0, _resultsViewJsDefault.default).update(_modelJs.getSearchResultsPage());
+        // 1 Updating bookmark
         (0, _bookmarkViewJsDefault.default).update(_modelJs.state.bookmarks);
-        // 1)"" Loading recipe
+        (0, _resultsViewJsDefault.default).update(_modelJs.getSearchResultsPage());
+        // 2)"" Loading recipe
         await _modelJs.loadRecipe(id);
-        // 2 Rendering recipe
+        // 3 Rendering recipe
         (0, _recipeViewJsDefault.default).render(_modelJs.state.recipe);
+    // debugger;
     } catch (error) {
         // calling the error methodo
         (0, _recipeViewJsDefault.default).renderError();
+        console.error(error);
     }
 };
 const controlSearchResults = async function() {
@@ -794,9 +797,12 @@ const controlAddBookmark = function() {
     // 3 Render
     (0, _bookmarkViewJsDefault.default).render(_modelJs.state.bookmarks);
 };
+const controlBookmarks = function() {
+    (0, _bookmarkViewJsDefault.default).render(_modelJs.state.bookmarks);
+};
 const init = function() {
-    // controllerServings(4);
     // iniciando o app com a funcao init logo no inicio  TODO
+    (0, _bookmarkViewJsDefault.default).addHandlerRender(controlBookmarks);
     (0, _recipeViewJsDefault.default).addHandlerRender(controlRecipe);
     (0, _recipeViewJsDefault.default).addHandlerUpdateServings(controllerServings);
     (0, _recipeViewJsDefault.default).haddHandlerBookmark(controlAddBookmark);
@@ -805,7 +811,7 @@ const init = function() {
 };
 init();
 
-},{"core-js/modules/web.immediate.js":"bzsBv","./model.js":"3QBkH","./views/searchView.js":"kbE4Z","./views/recipeView.js":"3wx5k","./views/resultsView.js":"kBQ4r","./views/paginationView.js":"7NIiB","./views/BookmarkView.js":"f6ZcH","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"bzsBv":[function(require,module,exports,__globalThis) {
+},{"core-js/modules/web.immediate.js":"bzsBv","./model.js":"3QBkH","./views/searchView.js":"kbE4Z","./views/recipeView.js":"3wx5k","./views/resultsView.js":"kBQ4r","./views/paginationView.js":"7NIiB","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","./views/bookmarkView.js":"jPLC7"}],"bzsBv":[function(require,module,exports,__globalThis) {
 'use strict';
 // TODO: Remove this module from `core-js@4` since it's split to modules listed below
 require("52e9b3eefbbce1ed");
@@ -2069,6 +2075,7 @@ parcelHelpers.export(exports, "getSearchResultsPage", ()=>getSearchResultsPage);
 parcelHelpers.export(exports, "updateServings", ()=>updateServings);
 parcelHelpers.export(exports, "addBookmarkd", ()=>addBookmarkd);
 parcelHelpers.export(exports, "deleteBookmark", ()=>deleteBookmark);
+parcelHelpers.export(exports, "init", ()=>init);
 var _configJs = require("./config.js");
 var _helpersJs = require("./helpers.js");
 var _bookmarkViewJs = require("./views/BookmarkView.js");
@@ -2161,12 +2168,8 @@ const init = (_)=>{
     const storage = localStorage.getItem('bookmark');
     if (storage) state.bookmarks = JSON.parse(storage);
     (0, _bookmarkViewJsDefault.default).render(JSON.parse(storage));
-};
-// init();
-[
-    'load',
-    'DOMContentLoaded'
-].forEach((e)=>window.addEventListener(e, init));
+}; // init();
+ // ['load', 'DOMContentLoaded'].forEach(e => window.addEventListener(e, init));
 
 },{"./config.js":"2hPh4","./helpers.js":"7nL9P","./views/BookmarkView.js":"f6ZcH","./views/recipeView.js":"3wx5k","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"2hPh4":[function(require,module,exports,__globalThis) {
 //  const KEY = "b1aad4fb-a9e4-44af-ba68-86c4d71f8958";
@@ -3029,6 +3032,33 @@ class PaginationView extends (0, _viewJsDefault.default) {
 }
 exports.default = new PaginationView();
 
-},{"url:../../img/icons.svg":"fd0vu","./view.js":"2kjY2","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}]},["5DuvQ","7dWZ8"], "7dWZ8", "parcelRequire065b", {}, "./", "/")
+},{"url:../../img/icons.svg":"fd0vu","./view.js":"2kjY2","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"jPLC7":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _iconsSvg = require("url:../../img/icons.svg");
+var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
+var _view = require("./view");
+var _viewDefault = parcelHelpers.interopDefault(_view);
+var _previewViewJs = require("./previewView.js");
+var _previewViewJsDefault = parcelHelpers.interopDefault(_previewViewJs);
+class BookmarkView extends (0, _viewDefault.default) {
+    _parentElement = document.querySelector('.bookmarks__list');
+    _errorMessage = `No bookmarks yet. Find a nice recipe and bookmark it :)`;
+    _message = '';
+    // addHandlerRender(handler) {
+    //   console.log(handler);
+    //   window.addEventListener('load', handler);
+    // }
+    addHandlerRender(handler) {
+        window.addEventListener('load', handler);
+        handler();
+    }
+    _generateMarkUp() {
+        return this._data.map((bookmark)=>(0, _previewViewJsDefault.default).render(bookmark, false)).join('');
+    }
+}
+exports.default = new BookmarkView();
+
+},{"url:../../img/icons.svg":"fd0vu","./view":"2kjY2","./previewView.js":"6tKHS","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}]},["5DuvQ","7dWZ8"], "7dWZ8", "parcelRequire065b", {}, "./", "/")
 
 //# sourceMappingURL=app_recipe_forkfy.4a59a05f.js.map
