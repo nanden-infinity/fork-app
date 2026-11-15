@@ -1,10 +1,10 @@
-import * as model from "./model.js";
-import paginationView from "./views/paginationView.js";
-import recipeView from "./views/recipeView.js";
-import resultsView from "./views/resultsView.js";
-import searchView from "./views/searchView.js";
-import "core-js/stable";
-import "regenerator-runtime/runtime.js";
+import * as model from './model.js';
+import paginationView from './views/paginationView.js';
+import recipeView from './views/recipeView.js';
+import resultsView from './views/resultsView.js';
+import searchView from './views/searchView.js';
+import 'core-js/stable';
+import 'regenerator-runtime/runtime.js';
 // NEW API URL (instead of the one shown in the video)
 // https://forkify-api.jonas.io
 
@@ -21,6 +21,7 @@ const controlRecipe = async function () {
     if (!id) return;
     recipeView.renderSpinner();
     //  0 Results view update to 0 search results View to current
+    // update nao render
     resultsView.update(model.getSearchResultsPage());
     // 1)"" Loading recipe
     await model.loadRecipe(id);
@@ -38,7 +39,7 @@ const controlSearchResults = async function () {
     resultsView.renderSpinner();
     const query = searchView.getInput();
     // 1 Get serach   query
-    if (!query) return "";
+    if (!query) return '';
     // 2 load serach results
     await model.loadSearchResults(query);
 
@@ -47,7 +48,7 @@ const controlSearchResults = async function () {
     // 4 Initial Pagination Button
     paginationView.render(model.state.search);
   } catch (error) {
-    console.log(error, "ERRO NO CONTROLLER");
+    console.log(error, 'ERRO NO CONTROLLER');
   }
 };
 
@@ -67,15 +68,23 @@ const controllerServings = function (newServings) {
   model.updateServings(newServings);
 
   // Update the  recipe view
-  recipeView.render(model.state.recipe);
-  // recipeView.update(model.state.recipe);
+  // recipeView.render(model.state.recipe);
+  recipeView.update(model.state.recipe);
 };
 
+// Add Bookmark
+const controlAddBookmark = function () {
+  // prettier-ignore
+  if (!model.state.recipe.bookmarked) model.addBookmarkd(model.state.recipe);
+  else model.deleteBookmark(model.state.recipe.id);
+  recipeView.update(model.state.recipe);
+};
 const init = function () {
   // controllerServings(4);
   // iniciando o app com a funcao init logo no inicio  TODO
   recipeView.addHandlerRender(controlRecipe);
   recipeView.addHandlerUpdateServings(controllerServings);
+  recipeView.haddHandlerBookmark(controlAddBookmark);
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controllerPagination);
 };
