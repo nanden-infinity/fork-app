@@ -1,21 +1,21 @@
-import { endpoint, RES_PER_PAGE, START_PAGE } from "./config.js";
-import { getJSON } from "./helpers.js";
-import recipeView from "./views/recipeView.js";
+import { endpoint, RES_PER_PAGE, START_PAGE } from './config.js';
+import { getJSON } from './helpers.js';
+import recipeView from './views/recipeView.js';
 export const state = {
   recipe: {},
   search: {
-    query: "",
+    query: '',
     results: [],
     page: START_PAGE,
     resultPerPage: RES_PER_PAGE,
   },
   bookmarks: [],
-  update: (recipe) => {
+  update: recipe => {
     const localItems = localStorage.setItem(
-      "bookmark",
-      JSON.stringify(["Mikl", "Jonas"]),
+      'bookmark',
+      JSON.stringify(['Mikl', 'Jonas']),
     );
-    const listItem = localStorage.getItem("bookmark");
+    const listItem = localStorage.getItem('bookmark');
     console.log(localItems);
     return recipe;
   },
@@ -40,7 +40,7 @@ export const loadRecipe = async function (id) {
       cookingTime: recipe.cooking_time,
       ingredients: recipe.ingredients,
     };
-    if (state.bookmarks.some((bookmark) => bookmark.id === id))
+    if (state.bookmarks.some(bookmark => bookmark.id === id))
       state.recipe.bookmarked = true;
     else state.recipe.bookmarked = false;
   } catch (error) {
@@ -58,7 +58,7 @@ export const loadSearchResults = async function (query) {
     const {
       data: { recipes },
     } = datarecipe;
-    state.search.results = recipes.map((recipe) => {
+    state.search.results = recipes.map(recipe => {
       return (recipe = {
         id: recipe.id,
         title: recipe.title,
@@ -68,7 +68,7 @@ export const loadSearchResults = async function (query) {
     });
     state.search.page = 1;
   } catch (error) {
-    console.log("Load faild");
+    console.log('Load faild');
     throw error;
   }
 };
@@ -81,7 +81,7 @@ export const getSearchResultsPage = function (page = state.search.page) {
 };
 
 export const updateServings = function (newServings) {
-  state.recipe.ingredients?.forEach((ing) => {
+  state.recipe.ingredients?.forEach(ing => {
     ing.quantity = (ing.quantity * newServings) / state.recipe.servings;
   });
   state.recipe.servings = newServings;
@@ -100,8 +100,7 @@ export const addBookmarkd = function (recipe) {
 
 export const deleteBookmark = function (id) {
   // console.log(id);
-  const index = state.bookmarks.findIndex((el) => el.id == id);
+  const index = state.bookmarks.findIndex(el => el.id == id);
   if (state.recipe.id === id) state.recipe.bookmarked = false;
   state.bookmarks.splice(index, 1);
-  console.log("index :", index, id, state.recipe);
 };
