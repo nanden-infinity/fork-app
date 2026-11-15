@@ -18,6 +18,7 @@ class PreviewView extends View {
             </div>
            </a>
         </li>`;
+
     // return markup;
   }
 }
