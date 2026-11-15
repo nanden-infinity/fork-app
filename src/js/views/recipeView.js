@@ -20,13 +20,61 @@ class RecipeView extends View {
 
       if (+updateTo <= 4) {
         updateTo = 4;
-        e.stopPropagation();
         btn.disabled = true;
       }
       handler(+updateTo);
     });
   }
+  // Bookmark handler
+  haddHandlerBookmark(handler) {
+    this._parentElement.addEventListener("click", ({ target }) => {
+      const btn = target.closest(".btn--bookmark");
+      console.log("elemento");
+      if (!btn) return;
+      handler();
+    });
+  }
 
+  // update(data) {
+  //   // if (!data || (Array.isArray(data) && data.length === 0))
+  //   //   return this.renderError();
+
+  //   this._data = data;
+
+  //   const newMarkUp = this._generateMarkUp();
+  //   const newDom = document.createRange().createContextualFragment(newMarkUp);
+
+  //   const newElements = Array.from(newDom.querySelectorAll("*"));
+  //   const currElements = Array.from(this._parentElement.querySelectorAll("*"));
+
+  //   newElements.forEach((newEl, i) => {
+  //     const currEl = currElements[i];
+
+  //     if (!currEl) return;
+
+  //     // Update text content
+  //     if (
+  //       newEl.children.length === 0 &&
+  //       newEl.textContent !== currEl.textContent
+  //     ) {
+  //       currEl.textContent = newEl.textContent;
+  //     }
+
+  //     // Remove old attributes
+  //     Array.from(currEl.attributes).forEach((attr) => {
+  //       if (!newEl.hasAttribute(attr.name)) {
+  //         currEl.removeAttribute(attr.name);
+  //       }
+  //     });
+
+  //     // Update attributes
+  //     Array.from(newEl.attributes).forEach((attr) => {
+  //       if (currEl.getAttribute(attr.name) !== attr.value) {
+  //         currEl.setAttribute(attr.name, attr.value);
+  //       }
+  //     });
+  //   });
+  // }
   // Generete Markup
   _generateMarkUp() {
     const html = ` <figure class="recipe__fig">
@@ -65,9 +113,9 @@ class RecipeView extends View {
             </div>
           </div>
 
-          <button class="btn--round">
+          <button class="btn--round btn--bookmark">
             <svg class="">
-              <use href="${icons}#icon-bookmark"></use>
+              <use href="${icons}#icon-bookmark${this._data.bookmarked ? "-fill" : ""}"></use>
             </svg>
           </button>
         </div>

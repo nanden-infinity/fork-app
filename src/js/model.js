@@ -1,12 +1,23 @@
-import { endpoint, RES_PER_PAGE, START_PAGE } from "./config.js";
-import { getJSON } from "./helpers.js";
+import { endpoint, RES_PER_PAGE, START_PAGE } from './config.js';
+import { getJSON } from './helpers.js';
+import recipeView from './views/recipeView.js';
 export const state = {
   recipe: {},
   search: {
-    query: "",
+    query: '',
     results: [],
-    page: 1,
+    page: START_PAGE,
     resultPerPage: RES_PER_PAGE,
+  },
+  bookmarks: [],
+  update: recipe => {
+    const localItems = localStorage.setItem(
+      'bookmark',
+      JSON.stringify(['Mikl', 'Jonas']),
+    );
+    const listItem = localStorage.getItem('bookmark');
+    console.log(localItems);
+    return recipe;
   },
 };
 
@@ -29,6 +40,9 @@ export const loadRecipe = async function (id) {
       cookingTime: recipe.cooking_time,
       ingredients: recipe.ingredients,
     };
+    if (state.bookmarks.some(bookmark => bookmark.id === id))
+      state.recipe.bookmarked = true;
+    else state.recipe.bookmarked = false;
   } catch (error) {
     console.error(`${error} 🔥🔥🔥🔥🔥🔥`);
     throw error;
@@ -44,7 +58,7 @@ export const loadSearchResults = async function (query) {
     const {
       data: { recipes },
     } = datarecipe;
-    state.search.results = recipes.map((recipe) => {
+    state.search.results = recipes.map(recipe => {
       return (recipe = {
         id: recipe.id,
         title: recipe.title,
@@ -52,8 +66,9 @@ export const loadSearchResults = async function (query) {
         image: recipe.image_url,
       });
     });
+    state.search.page = 1;
   } catch (error) {
-    console.log("Load faild");
+    console.log('Load faild');
     throw error;
   }
 };
@@ -66,11 +81,26 @@ export const getSearchResultsPage = function (page = state.search.page) {
 };
 
 export const updateServings = function (newServings) {
-  state.recipe.ingredients?.forEach((ing) => {
+  state.recipe.ingredients?.forEach(ing => {
     ing.quantity = (ing.quantity * newServings) / state.recipe.servings;
   });
   state.recipe.servings = newServings;
-  console.log(state.recipe);
   // building
   // newQt = oldQt *newServings / oldServings // 2 * 8 / 4 = 4
+};
+
+// bookmarkFunction
+// const helderBookmark = (value)=> value
+export const addBookmarkd = function (recipe) {
+  console.log(recipe);
+  // Add Bookmark
+  state.bookmarks.push(recipe);
+  if (recipe.id === state.recipe.id) state.recipe.bookmarked = true;
+};
+
+export const deleteBookmark = function (id) {
+  // console.log(id);
+  const index = state.bookmarks.findIndex(el => el.id == id);
+  if (state.recipe.id === id) state.recipe.bookmarked = false;
+  state.bookmarks.splice(index, 1);
 };
