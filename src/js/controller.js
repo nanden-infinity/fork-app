@@ -4,6 +4,10 @@ import searchView from './views/searchView.js';
 import recipeView from './views/recipeView.js';
 import resultsView from './views/resultsView.js';
 import paginationView from './views/paginationView.js';
+<<<<<<< HEAD
+=======
+import bookmarkView from './views/BookmarkView.js';
+>>>>>>> 46432cb (bookmark add to localStorage)
 import 'core-js/stable';
 import 'regenerator-runtime/runtime.js';
 
@@ -37,7 +41,10 @@ const controlRecipe = async function () {
   } catch (error) {
     // calling the error methodo
     recipeView.renderError();
+<<<<<<< HEAD
     console.error(error);
+=======
+>>>>>>> 46432cb (bookmark add to localStorage)
   }
 };
 

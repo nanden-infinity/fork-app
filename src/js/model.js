@@ -100,7 +100,11 @@ export const deleteBookmark = function (id) {
   persistBookmark();
 };
 
+<<<<<<< HEAD
 export const init = _ => {
+=======
+const init = _ => {
+>>>>>>> 46432cb (bookmark add to localStorage)
   persistBookmark();
   const storage = localStorage.getItem('bookmark');
   if (storage) state.bookmarks = JSON.parse(storage);
@@ -108,4 +112,8 @@ export const init = _ => {
 };
 
 // init();
+<<<<<<< HEAD
 // ['load', 'DOMContentLoaded'].forEach(e => window.addEventListener(e, init));
+=======
+['load', 'DOMContentLoaded'].forEach(e => window.addEventListener(e, init));
+>>>>>>> 46432cb (bookmark add to localStorage)
