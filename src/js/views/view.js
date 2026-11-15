@@ -19,31 +19,41 @@ export default class View {
   update(data) {
     if (!data || (Array.isArray(data) && data.length === 0))
       return this.renderError();
+
     this._data = data;
+
     const newMarkUp = this._generateMarkUp();
     const newDom = document.createRange().createContextualFragment(newMarkUp);
+
     const newElements = Array.from(newDom.querySelectorAll("*"));
     const currElements = Array.from(this._parentElement.querySelectorAll("*"));
+
     newElements.forEach((newEl, i) => {
       const currEl = currElements[i];
-      // const isIqual = newEl[i + 13].textContent === currEl[i + 13].textContent;
 
-      const istrue =
-        !newEl.isEqualNode(currEl) && newEl.firstChild?.nodeValue.trim() !== "";
-      if (istrue) {
-        currEl.textContent === newEl.textContent;
+      if (!currEl) return;
+
+      // Update text content
+      if (
+        newEl.children.length === 0 &&
+        newEl.textContent !== currEl.textContent
+      ) {
+        currEl.textContent = newEl.textContent;
       }
-      // Updates  the Atrribute
-      if (!newEl.isEqualNode(currEl)) {
-        const [, attr] = newEl.attributes;
-        [attr].forEach((atrr) => {
-          if (atrr) {
-            currEl.setAttribute(atrr.name, atrr.value);
-          }
-        });
-      }
-      // console.log(newEl.isEqualnode(currEl));
-      // if (!isIqual) currEl[i + 13].textContent = newEl[i + 13].textContent;
+
+      // Remove old attributes
+      Array.from(currEl.attributes).forEach((attr) => {
+        if (!newEl.hasAttribute(attr.name)) {
+          currEl.removeAttribute(attr.name);
+        }
+      });
+
+      // Update attributes
+      Array.from(newEl.attributes).forEach((attr) => {
+        if (currEl.getAttribute(attr.name) !== attr.value) {
+          currEl.setAttribute(attr.name, attr.value);
+        }
+      });
     });
   }
   // Load Spinner

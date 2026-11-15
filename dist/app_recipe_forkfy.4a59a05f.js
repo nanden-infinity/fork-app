@@ -738,6 +738,8 @@ const controlRecipe = async function() {
     try {
         if (!id) return;
         (0, _recipeViewJsDefault.default).renderSpinner();
+        //  0 Results view update to 0 search results View to current
+        (0, _resultsViewJsDefault.default).render(_modelJs.getSearchResultsPage());
         // 1)"" Loading recipe
         await _modelJs.loadRecipe(id);
         // 2 Rendering recipe
@@ -757,7 +759,6 @@ const controlSearchResults = async function() {
         // 2 load serach results
         await _modelJs.loadSearchResults(query);
         // 3 Render Results
-        // resultsView.render(model.state.search.results);
         (0, _resultsViewJsDefault.default).render(_modelJs.getSearchResultsPage());
         // 4 Initial Pagination Button
         (0, _paginationViewJsDefault.default).render(_modelJs.state.search);
@@ -779,7 +780,7 @@ const controllerServings = function(newServings) {
     _modelJs.updateServings(newServings);
     // Update the  recipe view
     (0, _recipeViewJsDefault.default).render(_modelJs.state.recipe);
-    (0, _recipeViewJsDefault.default).update(_modelJs.state.recipe);
+// recipeView.update(model.state.recipe);
 };
 const init = function() {
     // controllerServings(4);
@@ -2587,20 +2588,17 @@ class View {
         const currElements = Array.from(this._parentElement.querySelectorAll("*"));
         newElements.forEach((newEl, i)=>{
             const currEl = currElements[i];
-            // const isIqual = newEl[i + 13].textContent === currEl[i + 13].textContent;
-            const istrue = !newEl.isEqualNode(currEl) && newEl.firstChild?.nodeValue.trim() !== "";
-            if (istrue) currEl.textContent, newEl.textContent;
-            // Updates  the Atrribute
-            if (!newEl.isEqualNode(currEl)) {
-                const [, attr] = newEl.attributes;
-                [
-                    attr
-                ].forEach((atrr)=>{
-                    if (atrr) currEl.setAttribute(atrr.name, atrr.value);
-                });
-            }
-        // console.log(newEl.isEqualnode(currEl));
-        // if (!isIqual) currEl[i + 13].textContent = newEl[i + 13].textContent;
+            if (!currEl) return;
+            // Update text content
+            if (newEl.children.length === 0 && newEl.textContent !== currEl.textContent) currEl.textContent = newEl.textContent;
+            // Remove old attributes
+            Array.from(currEl.attributes).forEach((attr)=>{
+                if (!newEl.hasAttribute(attr.name)) currEl.removeAttribute(attr.name);
+            });
+            // Update attributes
+            Array.from(newEl.attributes).forEach((attr)=>{
+                if (currEl.getAttribute(attr.name) !== attr.value) currEl.setAttribute(attr.name, attr.value);
+            });
         });
     }
     // Load Spinner
@@ -2692,9 +2690,11 @@ class ResultsViews extends (0, _viewJsDefault.default) {
         return this._data.map(this._generateMarkUpPreview).join("");
     }
     _generateMarkUpPreview(result) {
+        const id = window.location.hash.slice(1);
+        console.log(id);
         const markup = `
         <li class="preview">
-           <a class="preview__link  ${result.id === location.hash.slice(1) ? "preview__link--active" : ""}" href="#${result.id}">
+           <a class="preview__link  ${result.id === id ? "preview__link--active" : ""}" href="#${result.id}">
              <figure class="preview__fig">
                <img src="${result.image}" alt="${result.title}" />
              </figure>
