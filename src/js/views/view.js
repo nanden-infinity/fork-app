@@ -17,8 +17,8 @@ export default class View {
 
   // Updating Recipe
   update(data) {
-    if (!data || (Array.isArray(data) && data.length === 0))
-      return this.renderError();
+    // if (!data || (Array.isArray(data) && data.length === 0))
+    //   return this.renderError();
 
     this._data = data;
 

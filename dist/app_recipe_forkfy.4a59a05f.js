@@ -739,7 +739,7 @@ const controlRecipe = async function() {
         if (!id) return;
         (0, _recipeViewJsDefault.default).renderSpinner();
         //  0 Results view update to 0 search results View to current
-        (0, _resultsViewJsDefault.default).render(_modelJs.getSearchResultsPage());
+        (0, _resultsViewJsDefault.default).update(_modelJs.getSearchResultsPage());
         // 1)"" Loading recipe
         await _modelJs.loadRecipe(id);
         // 2 Rendering recipe
@@ -2580,7 +2580,8 @@ class View {
     }
     // Updating Recipe
     update(data) {
-        if (!data || Array.isArray(data) && data.length === 0) return this.renderError();
+        // if (!data || (Array.isArray(data) && data.length === 0))
+        //   return this.renderError();
         this._data = data;
         const newMarkUp = this._generateMarkUp();
         const newDom = document.createRange().createContextualFragment(newMarkUp);
