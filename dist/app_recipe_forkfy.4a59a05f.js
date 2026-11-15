@@ -2740,9 +2740,11 @@ class ResultsViews extends (0, _viewJsDefault.default) {
         return this._data.map(this._generateMarkUpPreview).join("");
     }
     _generateMarkUpPreview(result) {
+        const id = window.location.hash.slice(1);
+        console.log(id);
         const markup = `
         <li class="preview">
-           <a class="preview__link  ${result.id === location.hash.slice(1) ? "preview__link--active" : ""}" href="#${result.id}">
+           <a class="preview__link  ${result.id === id ? "preview__link--active" : ""}" href="#${result.id}">
              <figure class="preview__fig">
                <img src="${result.image}" alt="${result.title}" />
              </figure>
@@ -2799,18 +2801,18 @@ var _recipeViewJsDefault = parcelHelpers.interopDefault(_recipeViewJs);
 const state = {
     recipe: {},
     search: {
-        query: "",
+        query: '',
         results: [],
         page: (0, _configJs.START_PAGE),
         resultPerPage: (0, _configJs.RES_PER_PAGE)
     },
     bookmarks: [],
     update: (recipe)=>{
-        const localItems = localStorage.setItem("bookmark", JSON.stringify([
-            "Mikl",
-            "Jonas"
+        const localItems = localStorage.setItem('bookmark', JSON.stringify([
+            'Mikl',
+            'Jonas'
         ]));
-        const listItem = localStorage.getItem("bookmark");
+        const listItem = localStorage.getItem('bookmark');
         console.log(localItems);
         return recipe;
     }
@@ -2852,7 +2854,7 @@ const loadSearchResults = async function(query) {
         });
         state.search.page = 1;
     } catch (error) {
-        console.log("Load faild");
+        console.log('Load faild');
         throw error;
     }
 };
@@ -2880,7 +2882,6 @@ const deleteBookmark = function(id) {
     const index = state.bookmarks.findIndex((el)=>el.id == id);
     if (state.recipe.id === id) state.recipe.bookmarked = false;
     state.bookmarks.splice(index, 1);
-    console.log("index :", index, id, state.recipe);
 };
 
 },{"./config.js":"2hPh4","./helpers.js":"7nL9P","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","./views/recipeView.js":"3wx5k"}],"2hPh4":[function(require,module,exports,__globalThis) {
