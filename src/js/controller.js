@@ -1,8 +1,9 @@
 import * as model from './model.js';
-import paginationView from './views/paginationView.js';
+import searchView from './views/searchView.js';
 import recipeView from './views/recipeView.js';
 import resultsView from './views/resultsView.js';
-import searchView from './views/searchView.js';
+import paginationView from './views/paginationView.js';
+import bookmarkView from './views/bookmarkView.js';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime.js';
 // NEW API URL (instead of the one shown in the video)
@@ -21,8 +22,9 @@ const controlRecipe = async function () {
     if (!id) return;
     recipeView.renderSpinner();
     //  0 Results view update to 0 search results View to current
-    // update nao render
+
     resultsView.update(model.getSearchResultsPage());
+    bookmarkView.update(model.state.bookmarks);
     // 1)"" Loading recipe
     await model.loadRecipe(id);
     // 2 Rendering recipe
@@ -74,10 +76,14 @@ const controllerServings = function (newServings) {
 
 // Add Bookmark
 const controlAddBookmark = function () {
+  // 1 Add/Remove Bookmark
   // prettier-ignore
   if (!model.state.recipe.bookmarked) model.addBookmarkd(model.state.recipe);
   else model.deleteBookmark(model.state.recipe.id);
+  // 2 Update Recipe View
   recipeView.update(model.state.recipe);
+  // 3 Render
+  bookmarkView.render(model.state.bookmarks);
 };
 const init = function () {
   // controllerServings(4);

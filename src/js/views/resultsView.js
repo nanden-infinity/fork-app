@@ -1,18 +1,17 @@
-import icons from "url:../../img/icons.svg";
-import View from "./view.js";
+import icons from 'url:../../img/icons.svg';
+import View from './view.js';
 
 class ResultsViews extends View {
-  _parentElement = document.querySelector(".results");
-  _errorMessage = "No recipe found for your query! plesase try again :)";
+  _parentElement = document.querySelector('.results');
+  _errorMessage = 'No recipe found for your query! plesase try again :)';
   _generateMarkUp() {
-    return this._data.map(this._generateMarkUpPreview).join("");
+    return this._data.map(this._generateMarkUpPreview).join('');
   }
   _generateMarkUpPreview(result) {
     const id = window.location.hash.slice(1);
-    console.log(id);
     const markup = `
         <li class="preview">
-           <a class="preview__link  ${result.id === id ? "preview__link--active" : ""}" href="#${result.id}">
+           <a class="preview__link  ${result.id === id ? 'preview__link--active' : ''}" href="#${result.id}">
              <figure class="preview__fig">
                <img src="${result.image}" alt="${result.title}" />
              </figure>
