@@ -1,18 +1,18 @@
-import icons from "url:../../img/icons.svg";
-import { Fraction } from "fraction.js";
-import View from "./view.js";
+import icons from 'url:../../img/icons.svg';
+import { Fraction } from 'fraction.js';
+import View from './view.js';
 
 class RecipeView extends View {
-  _parentElement = document.querySelector(".recipe");
+  _parentElement = document.querySelector('.recipe');
 
   // Handler Event
   addHandlerRender(handler) {
-    ["load", "hashchange"].forEach((e) => window.addEventListener(e, handler));
+    ['load', 'hashchange'].forEach(e => window.addEventListener(e, handler));
   }
   addHandlerUpdateServings(handler) {
     let index = 0;
-    this._parentElement.addEventListener("click", (e) => {
-      const btn = e.target.closest(".update-servings");
+    this._parentElement.addEventListener('click', e => {
+      const btn = e.target.closest('.update-servings');
       if (!btn) return;
       let { updateTo } = btn.dataset;
       // const istru = this._data.servings === 0;
@@ -27,10 +27,10 @@ class RecipeView extends View {
   }
   // Bookmark handler
   haddHandlerBookmark(handler) {
-    this._parentElement.addEventListener("click", ({ target }) => {
-      const btn = target.closest(".btn--bookmark");
-      console.log("elemento");
+    this._parentElement.addEventListener('click', ({ target }) => {
+      const btn = target.closest('.btn--bookmark');
       if (!btn) return;
+      console.log('elemento');
       handler();
     });
   }
@@ -115,7 +115,7 @@ class RecipeView extends View {
 
           <button class="btn--round btn--bookmark">
             <svg class="">
-              <use href="${icons}#icon-bookmark${this._data.bookmarked ? "-fill" : ""}"></use>
+              <use href="${icons}#icon-bookmark${this._data.bookmarked ? '-fill' : ''}"></use>
             </svg>
           </button>
         </div>
@@ -123,7 +123,7 @@ class RecipeView extends View {
         <div class="recipe__ingredients">
           <h2 class="heading--2">Recipe ingredients</h2>
           <ul class="recipe__ingredient-list">
-              ${this._data.ingredients.map(this._genereteMarkupIngredient).join("")}
+              ${this._data.ingredients.map(this._genereteMarkupIngredient).join('')}
           </ul>
         </div>
 
@@ -149,19 +149,20 @@ class RecipeView extends View {
   }
   _genereteMarkupIngredient(ing) {
     // console.log(ing);
-    const htmlIgre = `<li class="recipe__ingredient">
-               <svg class="recipe__icon">
-                 <use href="${icons}#icon-check"></use>
-              </svg>
-               <div class="recipe__quantity">
-              ${ing.quantity ? new Fraction(ing.quantity / 2).toString() : "0 g"}
-              </div>
-              <div class="recipe__description">
-                <span class="recipe__unit">${ing.unit ?? "Kg"}</span>
-              </div>
-            </li>
-`;
-    return htmlIgre;
+    const markUp = `
+             <li class="recipe__ingredient">
+                 <svg class="recipe__icon">
+                   <use href="${icons}#icon-check"></use>
+                  </svg>
+                 <div class="recipe__quantity">
+                  ${ing.quantity ? new Fraction(ing.quantity / 2).toString() : '0 g'}
+                 </div>
+                 <div class="recipe__description">
+                  <span class="recipe__unit">${ing.unit ?? 'Kg'}</span>
+                  </div>
+               </li>
+          `;
+    return markUp;
   }
 }
 
