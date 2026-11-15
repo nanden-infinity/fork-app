@@ -30,7 +30,6 @@ class RecipeView extends View {
     this._parentElement.addEventListener('click', ({ target }) => {
       const btn = target.closest('.btn--bookmark');
       if (!btn) return;
-      console.log('elemento');
       handler();
     });
   }
@@ -148,7 +147,6 @@ class RecipeView extends View {
     return html;
   }
   _genereteMarkupIngredient(ing) {
-    // console.log(ing);
     const markUp = `
              <li class="recipe__ingredient">
                  <svg class="recipe__icon">

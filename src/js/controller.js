@@ -3,7 +3,7 @@ import searchView from './views/searchView.js';
 import recipeView from './views/recipeView.js';
 import resultsView from './views/resultsView.js';
 import paginationView from './views/paginationView.js';
-import bookmarkView from './views/bookmarkView.js';
+import bookmarkView from './views/BookmarkView.js';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime.js';
 // NEW API URL (instead of the one shown in the video)
@@ -32,7 +32,6 @@ const controlRecipe = async function () {
   } catch (error) {
     // calling the error methodo
     recipeView.renderError();
-    console.log(`O seu erro ${error}`);
   }
 };
 
@@ -50,7 +49,7 @@ const controlSearchResults = async function () {
     // 4 Initial Pagination Button
     paginationView.render(model.state.search);
   } catch (error) {
-    console.log(error, 'ERRO NO CONTROLLER');
+    throw error;
   }
 };
 
@@ -65,7 +64,6 @@ function controllerPagination(gotoPage) {
 
 // Update Servings
 const controllerServings = function (newServings) {
-  console.log(newServings);
   // Update the servings recipe (in state)
   model.updateServings(newServings);
 

@@ -1,5 +1,6 @@
 import { endpoint, RES_PER_PAGE, START_PAGE } from './config.js';
 import { getJSON } from './helpers.js';
+import bookmarkView from './views/BookmarkView.js';
 import recipeView from './views/recipeView.js';
 export const state = {
   recipe: {},
@@ -9,19 +10,8 @@ export const state = {
     page: START_PAGE,
     resultPerPage: RES_PER_PAGE,
   },
-  bookmarks: [],
-  update: recipe => {
-    const localItems = localStorage.setItem(
-      'bookmark',
-      JSON.stringify(['Mikl', 'Jonas']),
-    );
-    const listItem = localStorage.getItem('bookmark');
-    console.log(localItems);
-    return recipe;
-  },
+  bookmarks: JSON.parse(localStorage.getItem('bookmark')) || [],
 };
-
-// setTimeout(() => console.log(state.recipe), 3000);
 
 export const loadRecipe = async function (id) {
   const url = `${endpoint}${id}`;
@@ -44,8 +34,7 @@ export const loadRecipe = async function (id) {
       state.recipe.bookmarked = true;
     else state.recipe.bookmarked = false;
   } catch (error) {
-    console.error(`${error} 🔥🔥🔥🔥🔥🔥`);
-    throw error;
+    throw `${error} 🔥🔥🔥🔥🔥🔥`;
   }
 };
 
@@ -68,7 +57,6 @@ export const loadSearchResults = async function (query) {
     });
     state.search.page = 1;
   } catch (error) {
-    console.log('Load faild');
     throw error;
   }
 };
@@ -90,17 +78,34 @@ export const updateServings = function (newServings) {
 };
 
 // bookmarkFunction
-// const helderBookmark = (value)=> value
+// Fuction persiset bookmark
+const persistBookmark = function () {
+  localStorage.setItem('bookmark', JSON.stringify(state.bookmarks));
+  const items = localStorage.getItem('bookmark');
+  if (JSON.parse(items).length === 0) {
+    localStorage.removeItem('bookmark');
+  }
+};
 export const addBookmarkd = function (recipe) {
-  console.log(recipe);
   // Add Bookmark
   state.bookmarks.push(recipe);
   if (recipe.id === state.recipe.id) state.recipe.bookmarked = true;
+  persistBookmark();
 };
 
 export const deleteBookmark = function (id) {
-  // console.log(id);
   const index = state.bookmarks.findIndex(el => el.id == id);
   if (state.recipe.id === id) state.recipe.bookmarked = false;
   state.bookmarks.splice(index, 1);
+  persistBookmark();
 };
+
+const init = _ => {
+  persistBookmark();
+  const storage = localStorage.getItem('bookmark');
+  if (storage) state.bookmarks = JSON.parse(storage);
+  bookmarkView.render(JSON.parse(storage));
+};
+
+// init();
+['load', 'DOMContentLoaded'].forEach(e => window.addEventListener(e, init));
