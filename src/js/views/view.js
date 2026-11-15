@@ -1,4 +1,4 @@
-import icons from "url:../../img/icons.svg";
+import icons from 'url:../../img/icons.svg';
 export default class View {
   _data;
 
@@ -6,13 +6,14 @@ export default class View {
   _errorMessage = `we couldn't find that  recipe. Please try another one! 😥😥😥 `;
   _successMessage = `Your recipe it's finded`;
 
-  render(data) {
+  render(data, render = true) {
     if (!data || (Array.isArray(data) && data.length === 0))
       return this.renderError();
     this._data = data;
     const markUp = this._generateMarkUp();
+    if (!render) return markUp;
     this._clear();
-    this._parentElement.insertAdjacentHTML("afterbegin", markUp);
+    this._parentElement.insertAdjacentHTML('afterbegin', markUp);
   }
 
   // Updating Recipe
@@ -25,8 +26,8 @@ export default class View {
     const newMarkUp = this._generateMarkUp();
     const newDom = document.createRange().createContextualFragment(newMarkUp);
 
-    const newElements = Array.from(newDom.querySelectorAll("*"));
-    const currElements = Array.from(this._parentElement.querySelectorAll("*"));
+    const newElements = Array.from(newDom.querySelectorAll('*'));
+    const currElements = Array.from(this._parentElement.querySelectorAll('*'));
 
     newElements.forEach((newEl, i) => {
       const currEl = currElements[i];
@@ -42,14 +43,14 @@ export default class View {
       }
 
       // Remove old attributes
-      Array.from(currEl.attributes).forEach((attr) => {
+      Array.from(currEl.attributes).forEach(attr => {
         if (!newEl.hasAttribute(attr.name)) {
           currEl.removeAttribute(attr.name);
         }
       });
 
       // Update attributes
-      Array.from(newEl.attributes).forEach((attr) => {
+      Array.from(newEl.attributes).forEach(attr => {
         if (currEl.getAttribute(attr.name) !== attr.value) {
           currEl.setAttribute(attr.name, attr.value);
         }
@@ -64,7 +65,7 @@ export default class View {
             </svg>
           </div>`;
     this._clear();
-    this._parentElement.insertAdjacentHTML("afterbegin", spinner);
+    this._parentElement.insertAdjacentHTML('afterbegin', spinner);
   }
 
   // BUG RenderError
@@ -79,7 +80,7 @@ export default class View {
             <p>${message}</p>
           </div>`;
     this._clear();
-    this._parentElement.insertAdjacentHTML("afterbegin", markup);
+    this._parentElement.insertAdjacentHTML('afterbegin', markup);
   }
   // RenderSuccess Menssage VIDEO
   renderSuccessMenssage(message = this._successMessage) {
@@ -93,10 +94,10 @@ export default class View {
             <p>${message}</p>
           </div>`;
     this._clear();
-    this._parentElement.insertAdjacentHTML("afterbegin", markup);
+    this._parentElement.insertAdjacentHTML('afterbegin', markup);
   }
   // Clear ParentElement Recipe
   _clear() {
-    this._parentElement.innerHTML = "";
+    this._parentElement.innerHTML = '';
   }
 }
