@@ -41,10 +41,7 @@ class InitAddRecipe {
       const dataArr = [...new FormData(this)];
       const data = Object.fromEntries(dataArr);
       handler(data);
-      // for (const [key, vale] of data.entries()) {
-      //   const [name, value] = vale;
-      //   console.log(name, value);
-      // }
+      console.log(this);
     });
   }
 }

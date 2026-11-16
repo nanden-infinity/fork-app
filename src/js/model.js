@@ -1,5 +1,5 @@
 import { endpoint, RES_PER_PAGE, START_PAGE } from './config.js';
-import { getJSON } from './helpers.js';
+import { getJSON, setJSON } from './helpers.js';
 import bookmarkView from './views/bookmark_View.js';
 import recipeView from './views/recipeView.js';
 export const state = {
@@ -105,6 +105,41 @@ export const init = _ => {
   const storage = localStorage.getItem('bookmark');
   if (storage) state.bookmarks = JSON.parse(storage);
   bookmarkView.render(JSON.parse(storage));
+};
+export const uploadRecipe = async function (newRecipe) {
+  try {
+    const ingredients = Object.entries(newRecipe)
+      .filter(([name, value]) => name.startsWith('ingredient') && value.trim())
+      .map(([, value]) => {
+        const parts = value.split(',').map(part => part.trim());
+        if (parts.length !== 3 || !parts[2]) {
+          throw new Error(
+            'Wrong ingredient format. Use "Quantity,Unit,Description".',
+          );
+        }
+
+        const [quantity, unit, description] = parts;
+        const parsedQuantity = quantity ? Number(quantity) : null;
+        if (parsedQuantity !== null && !Number.isFinite(parsedQuantity)) {
+          throw new Error(`Invalid ingredient quantity: ${quantity}`);
+        }
+
+        return {
+          quantity: parsedQuantity,
+          unit: unit || null,
+          description,
+        };
+      });
+    const recipe = {
+      title: newRecipe.title,
+      source_url: newRecipe.sourceUrl,
+      image_url: newRecipe.image,
+      publisher: newRecipe.publisher,
+      cooking_time: Number(newRecipe.cookingTime),
+      servings: Number(newRecipe.servings),
+      ingredients,
+    };
+  } catch (error) {}
 };
 
 // init();

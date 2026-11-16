@@ -26,3 +26,32 @@ export const getJSON = async function (url) {
     throw error;
   }
 };
+
+// SEND DATA INTO TO API
+
+export const setJSON = async function (url, uploadData) {
+  const raceFetch = [
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(uploadData),
+    }),
+    timeout(TIMEOUT_SEC),
+  ];
+  try {
+    const resp = await Promise.race(raceFetch);
+
+    const data = await resp.json();
+    resp.ok ? '' : (data.id = location.hash.slice(1));
+    if (!resp.ok)
+      throw new Error(
+        `data-message ${data.message},${data.id}, (${resp.status})`,
+      );
+    return data;
+  } catch (error) {
+    console.log('GETJSON');
+    throw error;
+  }
+};

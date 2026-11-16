@@ -93,8 +93,14 @@ const controlAddBookmark = function () {
 const controlBookmarks = function () {
   bookmarkView.render(model.state.bookmarks);
 };
-const controlAddrecipe = function (newRecipe) {
+const controlAddrecipe = async function (newRecipe) {
   console.log(newRecipe);
+  try {
+    await model.uploadRecipe(newRecipe);
+  } catch (error) {
+    console.log(error, `Errroo`);
+    addRecipeView.addrecipe.renderError(error.message);
+  }
 };
 
 const init = function () {
