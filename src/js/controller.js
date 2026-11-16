@@ -4,6 +4,7 @@ import searchView from './views/searchView.js';
 import recipeView from './views/recipeView.js';
 import resultsView from './views/resultsView.js';
 import paginationView from './views/paginationView.js';
+import { addRecipeView } from './views/addRecipeView.js';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime.js';
 
@@ -92,9 +93,14 @@ const controlAddBookmark = function () {
 const controlBookmarks = function () {
   bookmarkView.render(model.state.bookmarks);
 };
+const controlAddrecipe = function (newRecipe) {
+  console.log(newRecipe);
+};
+
 const init = function () {
   // iniciando o app com a funcao init logo no inicio  TODO
   bookmarkView.addHandlerRender(controlBookmarks);
+  addRecipeView.addHandlerUpload(controlAddrecipe);
   recipeView.addHandlerRender(controlRecipe);
   recipeView.addHandlerUpdateServings(controllerServings);
   recipeView.haddHandlerBookmark(controlAddBookmark);

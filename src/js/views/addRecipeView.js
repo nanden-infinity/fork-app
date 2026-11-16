@@ -26,8 +26,18 @@ class AddRecipeView extends View {
     this._buttonCloseModal.addEventListener('click',this._toggleShowWindow.bind(this));
     this._overlay.addEventListener('click', this._toggleShowWindow.bind(this));
   }
+}
+
+export default new AddRecipeView();
+class InitAddRecipe {
+  constructor() {
+    this.addrecipe = new AddRecipeView();
+    this.addrecipe._addHandlerShowWindow();
+    this.addrecipe._addHandlerHiddenWindow();
+  }
   addHandlerUpload(handler) {
-    this._parentElement.addEventListener('submit', function (e) {
+    this.addrecipe._parentElement.addEventListener('submit', function (e) {
+      e.preventDefault();
       const dataArr = [...new FormData(this)];
       const data = Object.fromEntries(dataArr);
       handler(data);
@@ -39,13 +49,4 @@ class AddRecipeView extends View {
   }
 }
 
-export default new AddRecipeView();
-class InitAddRecipe {
-  constructor() {
-    this.addrecipe = new AddRecipeView();
-    this.addrecipe._addHandlerShowWindow();
-    this.addrecipe._addHandlerHiddenWindow();
-  }
-}
-
-export const initApp = new InitAddRecipe();
+export const addRecipeView = new InitAddRecipe();
