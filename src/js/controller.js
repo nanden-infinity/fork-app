@@ -1,4 +1,4 @@
-import bookmarkView from './views/bookmarkView.js';
+import bookmarkView from './views/bookmark_View.js';
 import * as model from './model.js';
 import searchView from './views/searchView.js';
 import recipeView from './views/recipeView.js';
