@@ -802,18 +802,27 @@ const controlAddBookmark = function() {
 const controlBookmarks = function() {
     (0, _bookmarkViewJsDefault.default).render(_modelJs.state.bookmarks);
 };
-const controlAddrecipe = async function(newRecipe) {
+const controlAddRecipe = async function(newRecipe) {
     try {
+        // Render Spinner
+        (0, _addRecipeViewJs.addRecipeView).addrecipe.renderSpinner();
         // UploadRecipe
         await _modelJs.uploadRecipe(newRecipe);
         // Render Recipe View
         (0, _recipeViewJsDefault.default).render(_modelJs.state.recipe);
+<<<<<<< HEAD
         // Sucess Message
         (0, _addRecipeViewJs.addRecipeView).addrecipe.renderSuccessMenssage();
+=======
+        // Render Success_Message
+        (0, _addRecipeViewJs.addRecipeView).addrecipe.renderSuccessMenssage();
+        // Render bookmark View
+        (0, _bookmarkViewJsDefault.default).render(_modelJs.state.bookmarks);
+        // Changing ID Using Hostory API
+        window.history.pushState(null, '', `#${_modelJs.state.recipe.id}`);
+>>>>>>> upload-recipe-part-2
         // Modal Window
-        setTimeout(()=>{
-            (0, _addRecipeViewJs.addRecipeView).closeMogal();
-        }, (0, _configJs.TIMEOUT_OUT) * 1000);
+        (0, _addRecipeViewJs.addRecipeView).closeMogal();
     } catch (error) {
         console.log(error, `Errroo`);
         (0, _addRecipeViewJs.addRecipeView).addrecipe.renderError(error.message);
@@ -822,7 +831,7 @@ const controlAddrecipe = async function(newRecipe) {
 const init = function() {
     // iniciando o app com a funcao init logo no inicio  TODO
     (0, _bookmarkViewJsDefault.default).addHandlerRender(controlBookmarks);
-    (0, _addRecipeViewJs.addRecipeView).addHandlerUpload(controlAddrecipe);
+    (0, _addRecipeViewJs.addRecipeView).addHandlerUpload(controlAddRecipe);
     (0, _recipeViewJsDefault.default).addHandlerRender(controlRecipe);
     (0, _recipeViewJsDefault.default).addHandlerUpdateServings(controllerServings);
     (0, _recipeViewJsDefault.default).haddHandlerBookmark(controlAddBookmark);
@@ -2252,6 +2261,11 @@ class PreviewView extends (0, _viewJsDefault.default) {
              <div class="preview__data">
                <h4 class="preview__title">${this._data.title}</h4>
                <p class="preview__publisher">${this._data.publisher}</p>
+                <div class="recipe__user-generated ${this._data.key ? '' : 'hidden'}">
+                  <svg>
+                    <use href="${0, _iconsSvgDefault.default}.svg#icon-user"></use>
+                  </svg>
+                </div>
             </div>
            </a>
         </li>`;
@@ -2273,6 +2287,8 @@ parcelHelpers.export(exports, "deleteBookmark", ()=>deleteBookmark);
 parcelHelpers.export(exports, "init", ()=>init);
 parcelHelpers.export(exports, "uploadRecipe", ()=>uploadRecipe);
 var _configJs = require("./config.js");
+// import { getJSON, sendJSON } from './helpers.js';
+// import { getJSON, sendJSON } from './helpers.js';
 var _helpersJs = require("./helpers.js");
 var _bookmarkViewJs = require("./views/bookmark_View.js");
 var _bookmarkViewJsDefault = parcelHelpers.interopDefault(_bookmarkViewJs);
@@ -2304,9 +2320,8 @@ const createRecipeObject = function(data) {
     };
 };
 const loadRecipe = async function(id) {
-    const url = `${(0, _configJs.endpoint)}${id}`;
     try {
-        const data = await (0, _helpersJs.getJSON)(url);
+        const data = await (0, _helpersJs.AJAX)(`${(0, _configJs.endpoint)}${id}?key=${(0, _configJs.KEY)}`);
         state.recipe = createRecipeObject(data);
         if (state.bookmarks.some((bookmark)=>bookmark.id === id)) state.recipe.bookmarked = true;
         else state.recipe.bookmarked = false;
@@ -2317,14 +2332,17 @@ const loadRecipe = async function(id) {
 const loadSearchResults = async function(query) {
     try {
         state.search.query = query;
-        const datarecipe = await (0, _helpersJs.getJSON)(`${(0, _configJs.endpoint)}?search=${query}`);
+        const datarecipe = await (0, _helpersJs.AJAX)(`${(0, _configJs.endpoint)}?search=${query}&key=${(0, _configJs.KEY)}`);
         const { data: { recipes } } = datarecipe;
         state.search.results = recipes.map((recipe)=>{
-            return recipe = {
+            return {
                 id: recipe.id,
                 title: recipe.title,
                 publisher: recipe.publisher,
-                image: recipe.image_url
+                image: recipe.image_url,
+                ...recipe.key && {
+                    key: recipe.key
+                }
             };
         });
         state.search.page = 1;
@@ -2393,7 +2411,7 @@ const uploadRecipe = async function(newRecipe) {
             servings: Number(newRecipe.servings),
             ingredients
         };
-        const data = await (0, _helpersJs.setJSON)(`${(0, _configJs.endpoint)}?key=${(0, _configJs.KEY)}`, recipe);
+        const data = await (0, _helpersJs.AJAX)(`${(0, _configJs.endpoint)}?key=${(0, _configJs.KEY)}`, recipe);
         state.recipe = createRecipeObject(data);
         addBookmark(state.recipe);
     } catch (error) {
@@ -2423,8 +2441,7 @@ const KEY = '231dcc30-0822-484a-91e6-140e5b19ad95';
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"7nL9P":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "getJSON", ()=>getJSON);
-parcelHelpers.export(exports, "setJSON", ()=>setJSON);
+parcelHelpers.export(exports, "AJAX", ()=>AJAX);
 var _configJs = require("./config.js");
 const timeout = function(s) {
     return new Promise(function(_, reject) {
@@ -2433,44 +2450,78 @@ const timeout = function(s) {
         }, s * 1000);
     });
 };
+<<<<<<< HEAD
 const getJSON = async function(url) {
     const raceFetch = [
         fetch(url),
         timeout((0, _configJs.TIMEOUT_SEC))
     ];
+=======
+const AJAX = async function(url, upload) {
+>>>>>>> upload-recipe-part-2
     try {
-        const resp = await Promise.race(raceFetch);
-        const data = await resp.json();
-        resp.ok || (data.id = location.hash.slice(1));
-        if (!resp.ok) throw new Error(`data-message ${data.message},${data.id}, (${resp.status})`);
-        return data;
-    } catch (error) {
-        console.log('GETJSON');
-        throw error;
-    }
-};
-const setJSON = async function(url, uploadData) {
-    const raceFetch = [
-        fetch(url, {
+        const fetchPro = upload ? fetch(url, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify(uploadData)
-        }),
-        timeout((0, _configJs.TIMEOUT_SEC))
-    ];
-    try {
+            body: JSON.stringify(upload)
+        }) : fetch(url);
+        const raceFetch = [
+            fetchPro,
+            timeout((0, _configJs.TIMEOUT_SEC))
+        ];
         const resp = await Promise.race(raceFetch);
         const data = await resp.json();
-        resp.ok || (data.id = location.hash.slice(1));
+        // resp.ok ? '' : (data.id = location.hash.slice(1));
         if (!resp.ok) throw new Error(`data-message ${data.message},${data.id}, (${resp.status})`);
+        console.log(data);
         return data;
     } catch (error) {
-        console.log('GETJSON');
-        throw error;
+        console.log(error);
     }
-};
+}; // export const getJSON = async function (url) {
+ //   const raceFetch = [fetch(url), timeout(TIMEOUT_SEC)];
+ //   try {
+ //     const resp = await Promise.race(raceFetch);
+ //     const data = await resp.json();
+ //     resp.ok ? '' : (data.id = location.hash.slice(1));
+ //     if (!resp.ok)
+ //       throw new Error(
+ //         `data-message ${data.message},${data.id}, (${resp.status})`,
+ //       );
+ //     return data;
+ //   } catch (error) {
+ //     console.log('GETJSON');
+ //     throw error;
+ //   }
+ // };
+ // // SEND DATA INTO TO API
+ // export const sendJSON = async function (url, uploadData) {
+ //   const raceFetch = [
+ //     fetch(url, {
+ //       method: 'POST',
+ //       headers: {
+ //         'Content-type': 'application/json',
+ //       },
+ //       body: JSON.stringify(uploadData),
+ //     }),
+ //     timeout(TIMEOUT_SEC),
+ //   ];
+ //   try {
+ //     const resp = await Promise.race(raceFetch);
+ //     const data = await resp.json();
+ //     resp.ok ? '' : (data.id = location.hash.slice(1));
+ //     if (!resp.ok)
+ //       throw new Error(
+ //         `data-message ${data.message},${data.id}, (${resp.status})`,
+ //       );
+ //     return data;
+ //   } catch (error) {
+ //     console.log('GETJSON');
+ //     throw error;
+ //   }
+ // };
 
 },{"./config.js":"2hPh4","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"kbE4Z":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -2571,6 +2622,7 @@ class RecipeView extends (0, _viewJsDefault.default) {
     // }
     // Generete Markup
     _generateMarkUp() {
+        console.log(this._data);
         const html = ` <figure class="recipe__fig">
           <img src="${this._data.image}" alt="${this._data.title}" class="recipe__img" />
           <h1 class="recipe__title">
@@ -2606,7 +2658,11 @@ class RecipeView extends (0, _viewJsDefault.default) {
               </button>
             </div>
           </div>
-
+          <div class="recipe__user-generated ${this._data.key ? '' : 'hidden'}">
+            <svg>
+              <use href="${(0, _iconsSvgDefault.default)}.svg#icon-user"></use>
+            </svg>
+          </div>
           <button class="btn--round btn--bookmark">
             <svg class="">
               <use href="${(0, _iconsSvgDefault.default)}#icon-bookmark${this._data.bookmarked ? '-fill' : ''}"></use>
@@ -3177,7 +3233,9 @@ class InitAddRecipe {
         });
     }
     closeMogal() {
-        this.addrecipe._toggleShowWindow();
+        setTimeout(()=>{
+            this.addrecipe._toggleShowWindow();
+        }, (0, _configJs.TIMEOUT_OUT) * 1000);
     }
 }
 const addRecipeView = new InitAddRecipe();

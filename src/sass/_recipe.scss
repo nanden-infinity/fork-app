@@ -10,7 +10,7 @@
     transform-origin: top;
 
     &::before {
-      content: "";
+      content: '';
       display: block;
       height: 100%;
       width: 100%;
@@ -108,7 +108,7 @@
     height: 4rem;
     width: 4rem;
     border-radius: 10rem;
-
+    cursor: pointer;
     margin-left: auto;
     margin-right: 1.75rem;
 

@@ -46,7 +46,9 @@ class InitAddRecipe {
     });
   }
   closeMogal() {
-    this.addrecipe._toggleShowWindow();
+    setTimeout(() => {
+      this.addrecipe._toggleShowWindow();
+    }, TIMEOUT_OUT * 1000);
   }
 }
 

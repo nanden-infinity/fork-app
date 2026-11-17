@@ -95,18 +95,28 @@ const controlAddBookmark = function () {
 const controlBookmarks = function () {
   bookmarkView.render(model.state.bookmarks);
 };
-const controlAddrecipe = async function (newRecipe) {
+const controlAddRecipe = async function (newRecipe) {
   try {
+    // Render Spinner
+    addRecipeView.addrecipe.renderSpinner();
     // UploadRecipe
     await model.uploadRecipe(newRecipe);
     // Render Recipe View
     recipeView.render(model.state.recipe);
+<<<<<<< HEAD
     // Sucess Message
     addRecipeView.addrecipe.renderSuccessMenssage();
+=======
+    // Render Success_Message
+    addRecipeView.addrecipe.renderSuccessMenssage();
+    // Render bookmark View
+    bookmarkView.render(model.state.bookmarks);
+    // Changing ID Using Hostory API
+    window.history.pushState(null, '', `#${model.state.recipe.id}`);
+>>>>>>> upload-recipe-part-2
     // Modal Window
-    setTimeout(() => {
-      addRecipeView.closeMogal();
-    }, TIMEOUT_OUT * 1000);
+
+    addRecipeView.closeMogal();
   } catch (error) {
     console.log(error, `Errroo`);
     addRecipeView.addrecipe.renderError(error.message);
@@ -116,7 +126,7 @@ const controlAddrecipe = async function (newRecipe) {
 const init = function () {
   // iniciando o app com a funcao init logo no inicio  TODO
   bookmarkView.addHandlerRender(controlBookmarks);
-  addRecipeView.addHandlerUpload(controlAddrecipe);
+  addRecipeView.addHandlerUpload(controlAddRecipe);
   recipeView.addHandlerRender(controlRecipe);
   recipeView.addHandlerUpdateServings(controllerServings);
   recipeView.haddHandlerBookmark(controlAddBookmark);

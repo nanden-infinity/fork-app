@@ -1,6 +1,12 @@
 import { endpoint, KEY, RES_PER_PAGE, START_PAGE } from './config.js';
+<<<<<<< HEAD
 import { getJSON, setJSON } from './helpers.js';
 console.log(setJSON);
+=======
+// import { getJSON, sendJSON } from './helpers.js';
+// import { getJSON, sendJSON } from './helpers.js';
+import { AJAX } from './helpers.js';
+>>>>>>> upload-recipe-part-2
 import bookmarkView from './views/bookmark_View.js';
 // import recipeView from './views/recipeView.js';
 export const state = {
@@ -30,9 +36,8 @@ const createRecipeObject = function (data) {
   };
 };
 export const loadRecipe = async function (id) {
-  const url = `${endpoint}${id}`;
   try {
-    const data = await getJSON(url);
+    const data = await AJAX(`${endpoint}${id}?key=${KEY}`);
 
     state.recipe = createRecipeObject(data);
     if (state.bookmarks.some(bookmark => bookmark.id === id))
@@ -48,17 +53,18 @@ export const loadRecipe = async function (id) {
 export const loadSearchResults = async function (query) {
   try {
     state.search.query = query;
-    const datarecipe = await getJSON(`${endpoint}?search=${query}`);
+    const datarecipe = await AJAX(`${endpoint}?search=${query}&key=${KEY}`);
     const {
       data: { recipes },
     } = datarecipe;
     state.search.results = recipes.map(recipe => {
-      return (recipe = {
+      return {
         id: recipe.id,
         title: recipe.title,
         publisher: recipe.publisher,
         image: recipe.image_url,
-      });
+        ...(recipe.key && { key: recipe.key }),
+      };
     });
     state.search.page = 1;
   } catch (error) {
@@ -144,7 +150,7 @@ export const uploadRecipe = async function (newRecipe) {
       servings: Number(newRecipe.servings),
       ingredients,
     };
-    const data = await setJSON(`${endpoint}?key=${KEY}`, recipe);
+    const data = await AJAX(`${endpoint}?key=${KEY}`, recipe);
     state.recipe = createRecipeObject(data);
     addBookmark(state.recipe);
   } catch (error) {
