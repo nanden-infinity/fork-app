@@ -103,17 +103,8 @@ const controlAddRecipe = async function (newRecipe) {
     await model.uploadRecipe(newRecipe);
     // Render Recipe View
     recipeView.render(model.state.recipe);
-<<<<<<< HEAD
     // Sucess Message
     addRecipeView.addrecipe.renderSuccessMenssage();
-=======
-    // Render Success_Message
-    addRecipeView.addrecipe.renderSuccessMenssage();
-    // Render bookmark View
-    bookmarkView.render(model.state.bookmarks);
-    // Changing ID Using Hostory API
-    window.history.pushState(null, '', `#${model.state.recipe.id}`);
->>>>>>> upload-recipe-part-2
     // Modal Window
 
     addRecipeView.closeMogal();
