@@ -10,6 +10,7 @@ const timeout = function (s) {
   });
 };
 export const getJSON = async function (url) {
+  console.log(url);
   const raceFetch = [fetch(url), timeout(TIMEOUT_SEC)];
   try {
     const resp = await Promise.race(raceFetch);

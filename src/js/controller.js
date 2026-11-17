@@ -5,6 +5,7 @@ import recipeView from './views/recipeView.js';
 import resultsView from './views/resultsView.js';
 import paginationView from './views/paginationView.js';
 import { addRecipeView } from './views/addRecipeView.js';
+import { TIMEOUT_OUT } from './config.js';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime.js';
 
@@ -94,9 +95,17 @@ const controlBookmarks = function () {
   bookmarkView.render(model.state.bookmarks);
 };
 const controlAddrecipe = async function (newRecipe) {
-  console.log(newRecipe);
   try {
+    // UploadRecipe
     await model.uploadRecipe(newRecipe);
+    // Render Recipe View
+    recipeView.render(model.state.recipe);
+    // Sucess Message
+    addRecipeView.addrecipe._successMessage();
+    // Modal Window
+    setTimeout(() => {
+      addRecipeView.closeMogal();
+    }, TIMEOUT_OUT * 1000);
   } catch (error) {
     console.log(error, `Errroo`);
     addRecipeView.addrecipe.renderError(error.message);

@@ -1,7 +1,7 @@
-import { endpoint, RES_PER_PAGE, START_PAGE } from './config.js';
+import { endpoint, KEY, RES_PER_PAGE, START_PAGE } from './config.js';
 import { getJSON, setJSON } from './helpers.js';
 import bookmarkView from './views/bookmark_View.js';
-import recipeView from './views/recipeView.js';
+// import recipeView from './views/recipeView.js';
 export const state = {
   recipe: {},
   search: {
@@ -13,23 +13,27 @@ export const state = {
   bookmarks: JSON.parse(localStorage.getItem('bookmark')) || [],
 };
 
+const createRecipeObject = function (data) {
+  const { recipe } = data.data;
+
+  return {
+    id: recipe.id,
+    title: recipe.title,
+    publisher: recipe.publisher,
+    sourceUrl: recipe.source_url,
+    image: recipe.image_url,
+    servings: recipe.servings,
+    cookingTime: recipe.cooking_time,
+    ingredients: recipe.ingredients,
+    ...(recipe.key && { key: recipe.key }),
+  };
+};
 export const loadRecipe = async function (id) {
   const url = `${endpoint}${id}`;
   try {
-    const { data } = await getJSON(url);
+    const data = await getJSON(url);
 
-    const { recipe } = data;
-
-    state.recipe = {
-      id: recipe.id,
-      title: recipe.title,
-      publisher: recipe.publisher,
-      sourceUrl: recipe.source_url,
-      image: recipe.image_url,
-      servings: recipe.servings,
-      cookingTime: recipe.cooking_time,
-      ingredients: recipe.ingredients,
-    };
+    state.recipe = createRecipeObject(data);
     if (state.bookmarks.some(bookmark => bookmark.id === id))
       state.recipe.bookmarked = true;
     else state.recipe.bookmarked = false;
@@ -86,7 +90,7 @@ const persistBookmark = function () {
     localStorage.removeItem('bookmark');
   }
 };
-export const addBookmarkd = function (recipe) {
+export const addBookmark = function (recipe) {
   // Add Bookmark
   state.bookmarks.push(recipe);
   if (recipe.id === state.recipe.id) state.recipe.bookmarked = true;
@@ -100,7 +104,7 @@ export const deleteBookmark = function (id) {
   persistBookmark();
 };
 
-export const init = _ => {
+export const init = () => {
   persistBookmark();
   const storage = localStorage.getItem('bookmark');
   if (storage) state.bookmarks = JSON.parse(storage);
@@ -139,7 +143,13 @@ export const uploadRecipe = async function (newRecipe) {
       servings: Number(newRecipe.servings),
       ingredients,
     };
-  } catch (error) {}
+    const data = await setJSON(`${endpoint}?key=${KEY}`, recipe);
+    state.recipe = createRecipeObject(data);
+    addBookmark(state.recipe);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 };
 
 // init();
