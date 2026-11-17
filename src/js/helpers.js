@@ -9,13 +9,6 @@ const timeout = function (s) {
     }, s * 1000);
   });
 };
-<<<<<<< HEAD
-export const getJSON = async function (url) {
-  const raceFetch = [fetch(url), timeout(TIMEOUT_SEC)];
-  try {
-    const resp = await Promise.race(raceFetch);
-=======
->>>>>>> upload-recipe-part-2
 
 export const AJAX = async function (url, upload = undefined) {
   try {

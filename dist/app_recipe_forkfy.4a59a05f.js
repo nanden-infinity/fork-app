@@ -728,7 +728,6 @@ var _resultsViewJsDefault = parcelHelpers.interopDefault(_resultsViewJs);
 var _paginationViewJs = require("./views/paginationView.js");
 var _paginationViewJsDefault = parcelHelpers.interopDefault(_paginationViewJs);
 var _addRecipeViewJs = require("./views/addRecipeView.js");
-var _configJs = require("./config.js");
 // NEW API URL (instead of the one shown in the video)
 // https://forkify-api.jonas.io
 ///////////////////////////////////////
@@ -810,17 +809,8 @@ const controlAddRecipe = async function(newRecipe) {
         await _modelJs.uploadRecipe(newRecipe);
         // Render Recipe View
         (0, _recipeViewJsDefault.default).render(_modelJs.state.recipe);
-<<<<<<< HEAD
         // Sucess Message
         (0, _addRecipeViewJs.addRecipeView).addrecipe.renderSuccessMenssage();
-=======
-        // Render Success_Message
-        (0, _addRecipeViewJs.addRecipeView).addrecipe.renderSuccessMenssage();
-        // Render bookmark View
-        (0, _bookmarkViewJsDefault.default).render(_modelJs.state.bookmarks);
-        // Changing ID Using Hostory API
-        window.history.pushState(null, '', `#${_modelJs.state.recipe.id}`);
->>>>>>> upload-recipe-part-2
         // Modal Window
         (0, _addRecipeViewJs.addRecipeView).closeMogal();
     } catch (error) {
@@ -840,7 +830,7 @@ const init = function() {
 };
 init();
 
-},{"core-js/modules/web.immediate.js":"bzsBv","./views/bookmark_View.js":"iyKS8","./model.js":"3QBkH","./views/searchView.js":"kbE4Z","./views/recipeView.js":"3wx5k","./views/resultsView.js":"kBQ4r","./views/paginationView.js":"7NIiB","./views/addRecipeView.js":"8AWnP","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","./config.js":"2hPh4"}],"bzsBv":[function(require,module,exports,__globalThis) {
+},{"core-js/modules/web.immediate.js":"bzsBv","./views/bookmark_View.js":"iyKS8","./model.js":"3QBkH","./views/searchView.js":"kbE4Z","./views/recipeView.js":"3wx5k","./views/resultsView.js":"kBQ4r","./views/paginationView.js":"7NIiB","./views/addRecipeView.js":"8AWnP","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"bzsBv":[function(require,module,exports,__globalThis) {
 'use strict';
 // TODO: Remove this module from `core-js@4` since it's split to modules listed below
 require("52e9b3eefbbce1ed");
@@ -2292,7 +2282,6 @@ var _configJs = require("./config.js");
 var _helpersJs = require("./helpers.js");
 var _bookmarkViewJs = require("./views/bookmark_View.js");
 var _bookmarkViewJsDefault = parcelHelpers.interopDefault(_bookmarkViewJs);
-console.log((0, _helpersJs.setJSON));
 const state = {
     recipe: {},
     search: {
@@ -2421,7 +2410,7 @@ const uploadRecipe = async function(newRecipe) {
 }; // init();
  // ['load', 'DOMContentLoaded'].forEach(e => window.addEventListener(e, init));
 
-},{"./config.js":"2hPh4","./views/bookmark_View.js":"iyKS8","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","./helpers.js":"7nL9P"}],"2hPh4":[function(require,module,exports,__globalThis) {
+},{"./config.js":"2hPh4","./helpers.js":"7nL9P","./views/bookmark_View.js":"iyKS8","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"2hPh4":[function(require,module,exports,__globalThis) {
 //  const KEY = "b1aad4fb-a9e4-44af-ba68-86c4d71f8958";
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
@@ -2450,15 +2439,7 @@ const timeout = function(s) {
         }, s * 1000);
     });
 };
-<<<<<<< HEAD
-const getJSON = async function(url) {
-    const raceFetch = [
-        fetch(url),
-        timeout((0, _configJs.TIMEOUT_SEC))
-    ];
-=======
 const AJAX = async function(url, upload) {
->>>>>>> upload-recipe-part-2
     try {
         const fetchPro = upload ? fetch(url, {
             method: 'POST',
