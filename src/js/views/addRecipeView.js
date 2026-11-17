@@ -1,12 +1,14 @@
 import icons from 'url:../../img/icons.svg';
 import View from './view.js';
-
+import { TIMEOUT_OUT } from '../config.js';
 class AddRecipeView extends View {
   // constructor() {
   //   super(this);
   //   this._addHandlerShowWindow();
   // }
   _parentElement = document.querySelector('.upload');
+  _successMessage = 'Recipe was successfuly uploaded :)';
+
   _windowElement = document.querySelector('.add-recipe-window');
   _overlay = document.querySelector('.overlay');
   _buttonOpenModal = document.querySelector('.nav__btn--add-recipe');
@@ -41,11 +43,10 @@ class InitAddRecipe {
       const dataArr = [...new FormData(this)];
       const data = Object.fromEntries(dataArr);
       handler(data);
-      // for (const [key, vale] of data.entries()) {
-      //   const [name, value] = vale;
-      //   console.log(name, value);
-      // }
     });
+  }
+  closeMogal() {
+    this.addrecipe._toggleShowWindow();
   }
 }
 
