@@ -716,9 +716,9 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 },{}],"7dWZ8":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _webImmediateJs = require("core-js/modules/web.immediate.js");
+var _modelJs = require("./model.js");
 var _bookmarkViewJs = require("./views/bookmark_View.js");
 var _bookmarkViewJsDefault = parcelHelpers.interopDefault(_bookmarkViewJs);
-var _modelJs = require("./model.js");
 var _searchViewJs = require("./views/searchView.js");
 var _searchViewJsDefault = parcelHelpers.interopDefault(_searchViewJs);
 var _recipeViewJs = require("./views/recipeView.js");
@@ -792,7 +792,7 @@ const controllerServings = function(newServings) {
 const controlAddBookmark = function() {
     // 1 Add/Remove Bookmark
     // prettier-ignore
-    if (!_modelJs.state.recipe.bookmarked) _modelJs.addBookmarkd(_modelJs.state.recipe);
+    if (!_modelJs.state.recipe.bookmarked) _modelJs.addBookmark(_modelJs.state.recipe);
     else _modelJs.deleteBookmark(_modelJs.state.recipe.id);
     // 2 Update Recipe View
     (0, _recipeViewJsDefault.default).update(_modelJs.state.recipe);
@@ -809,7 +809,7 @@ const controlAddrecipe = async function(newRecipe) {
         // Render Recipe View
         (0, _recipeViewJsDefault.default).render(_modelJs.state.recipe);
         // Sucess Message
-        (0, _addRecipeViewJs.addRecipeView).addrecipe._successMessage();
+        (0, _addRecipeViewJs.addRecipeView).addrecipe.renderSuccessMenssage();
         // Modal Window
         setTimeout(()=>{
             (0, _addRecipeViewJs.addRecipeView).closeMogal();
@@ -831,11 +831,7 @@ const init = function() {
 };
 init();
 
-<<<<<<< HEAD
-},{"core-js/modules/web.immediate.js":"bzsBv","./views/bookmark_View.js":"iyKS8","./model.js":"3QBkH","./views/searchView.js":"kbE4Z","./views/recipeView.js":"3wx5k","./views/resultsView.js":"kBQ4r","./views/paginationView.js":"7NIiB","./views/addRecipeView.js":"8AWnP","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"bzsBv":[function(require,module,exports,__globalThis) {
-=======
 },{"core-js/modules/web.immediate.js":"bzsBv","./views/bookmark_View.js":"iyKS8","./model.js":"3QBkH","./views/searchView.js":"kbE4Z","./views/recipeView.js":"3wx5k","./views/resultsView.js":"kBQ4r","./views/paginationView.js":"7NIiB","./views/addRecipeView.js":"8AWnP","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","./config.js":"2hPh4"}],"bzsBv":[function(require,module,exports,__globalThis) {
->>>>>>> upload-recipe-part-2
 'use strict';
 // TODO: Remove this module from `core-js@4` since it's split to modules listed below
 require("52e9b3eefbbce1ed");
@@ -2396,7 +2392,7 @@ const uploadRecipe = async function(newRecipe) {
             servings: Number(newRecipe.servings),
             ingredients
         };
-        const data = await (0, _helpersJs.setJSON)(`${(0, _configJs.endpoint)}?key=${(0, _configJs.KEY)}`, recipe);
+        const data = await sendJSON(`${(0, _configJs.endpoint)}?key=${(0, _configJs.KEY)}`, recipe);
         state.recipe = createRecipeObject(data);
         addBookmark(state.recipe);
     } catch (error) {
@@ -2406,11 +2402,7 @@ const uploadRecipe = async function(newRecipe) {
 }; // init();
  // ['load', 'DOMContentLoaded'].forEach(e => window.addEventListener(e, init));
 
-<<<<<<< HEAD
-},{"./config.js":"2hPh4","./helpers.js":"7nL9P","./views/bookmark_View.js":"iyKS8","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","./views/recipeView.js":"3wx5k"}],"2hPh4":[function(require,module,exports,__globalThis) {
-=======
 },{"./config.js":"2hPh4","./helpers.js":"7nL9P","./views/bookmark_View.js":"iyKS8","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"2hPh4":[function(require,module,exports,__globalThis) {
->>>>>>> upload-recipe-part-2
 //  const KEY = "b1aad4fb-a9e4-44af-ba68-86c4d71f8958";
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
@@ -3056,36 +3048,7 @@ Licensed under the MIT license.
     }), v["default"] = v, v.Fraction = v, module.exports = v);
 })(this);
 
-<<<<<<< HEAD
-},{}],"kbE4Z":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-class SearchView {
-    #parantElement = document.querySelector(".search");
-    addHandlerSearch(handler) {
-        this.#parantElement.addEventListener("submit", (e)=>{
-            e.preventDefault();
-            this.getInput();
-            handler();
-            this._clearInput();
-        });
-    }
-    getInput() {
-        const input = this.#parantElement.querySelector(".search__field");
-        const inputValue = input.value;
-        // input.value = "";
-        return inputValue;
-    }
-    _clearInput() {
-        this.#parantElement.querySelector(".search__field").value = "";
-    }
-}
-exports.default = new SearchView();
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"kBQ4r":[function(require,module,exports,__globalThis) {
-=======
 },{}],"kBQ4r":[function(require,module,exports,__globalThis) {
->>>>>>> upload-recipe-part-2
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _viewJs = require("./view.js");

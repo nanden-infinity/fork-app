@@ -1,11 +1,12 @@
-import bookmarkView from './views/bookmark_View.js';
 import * as model from './model.js';
+import bookmarkView from './views/bookmark_View.js';
 import searchView from './views/searchView.js';
 import recipeView from './views/recipeView.js';
 import resultsView from './views/resultsView.js';
 import paginationView from './views/paginationView.js';
 import { addRecipeView } from './views/addRecipeView.js';
 import { TIMEOUT_OUT } from './config.js';
+
 import 'core-js/stable';
 import 'regenerator-runtime/runtime.js';
 
@@ -84,7 +85,7 @@ const controllerServings = function (newServings) {
 const controlAddBookmark = function () {
   // 1 Add/Remove Bookmark
   // prettier-ignore
-  if (!model.state.recipe.bookmarked) model.addBookmarkd(model.state.recipe);
+  if (!model.state.recipe.bookmarked) model.addBookmark(model.state.recipe);
   else model.deleteBookmark(model.state.recipe.id);
   // 2 Update Recipe View
   recipeView.update(model.state.recipe);
@@ -101,7 +102,7 @@ const controlAddrecipe = async function (newRecipe) {
     // Render Recipe View
     recipeView.render(model.state.recipe);
     // Sucess Message
-    addRecipeView.addrecipe._successMessage();
+    addRecipeView.addrecipe.renderSuccessMenssage();
     // Modal Window
     setTimeout(() => {
       addRecipeView.closeMogal();

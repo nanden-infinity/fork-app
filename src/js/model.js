@@ -1,5 +1,6 @@
 import { endpoint, KEY, RES_PER_PAGE, START_PAGE } from './config.js';
 import { getJSON, setJSON } from './helpers.js';
+console.log(setJSON);
 import bookmarkView from './views/bookmark_View.js';
 // import recipeView from './views/recipeView.js';
 export const state = {
