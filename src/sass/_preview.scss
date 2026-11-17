@@ -30,7 +30,7 @@
     backface-visibility: hidden;
 
     &::before {
-      content: "";
+      content: '';
       display: block;
       height: 100%;
       width: 100%;
@@ -92,7 +92,7 @@
     height: 2rem;
     width: 2rem;
     border-radius: 10rem;
-
+    cursor: pointer;
     margin-left: auto;
     margin-right: 1.75rem;
 

@@ -76,6 +76,7 @@ class RecipeView extends View {
   // }
   // Generete Markup
   _generateMarkUp() {
+    console.log(this._data);
     const html = ` <figure class="recipe__fig">
           <img src="${this._data.image}" alt="${this._data.title}" class="recipe__img" />
           <h1 class="recipe__title">
@@ -111,7 +112,11 @@ class RecipeView extends View {
               </button>
             </div>
           </div>
-
+          <div class="recipe__user-generated ${this._data.key ? '' : 'hidden'}">
+            <svg>
+              <use href="${icons}.svg#icon-user"></use>
+            </svg>
+          </div>
           <button class="btn--round btn--bookmark">
             <svg class="">
               <use href="${icons}#icon-bookmark${this._data.bookmarked ? '-fill' : ''}"></use>

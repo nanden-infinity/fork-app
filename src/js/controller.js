@@ -84,7 +84,7 @@ const controllerServings = function (newServings) {
 const controlAddBookmark = function () {
   // 1 Add/Remove Bookmark
   // prettier-ignore
-  if (!model.state.recipe.bookmarked) model.addBookmarkd(model.state.recipe);
+  if (!model.state.recipe.bookmarked) model.addBookmark(model.state.recipe);
   else model.deleteBookmark(model.state.recipe.id);
   // 2 Update Recipe View
   recipeView.update(model.state.recipe);
@@ -94,18 +94,23 @@ const controlAddBookmark = function () {
 const controlBookmarks = function () {
   bookmarkView.render(model.state.bookmarks);
 };
-const controlAddrecipe = async function (newRecipe) {
+const controlAddRecipe = async function (newRecipe) {
   try {
+    // Render Spinner
+    addRecipeView.addrecipe.renderSpinner();
     // UploadRecipe
     await model.uploadRecipe(newRecipe);
     // Render Recipe View
     recipeView.render(model.state.recipe);
-    // Sucess Message
-    addRecipeView.addrecipe._successMessage();
+    // Render Success_Message
+    addRecipeView.addrecipe.renderSuccessMenssage();
+    // Render bookmark View
+    bookmarkView.render(model.state.bookmarks);
+    // Changing ID Using Hostory API
+    window.history.pushState(null, '', `#${model.state.recipe.id}`);
     // Modal Window
-    setTimeout(() => {
-      addRecipeView.closeMogal();
-    }, TIMEOUT_OUT * 1000);
+
+    addRecipeView.closeMogal();
   } catch (error) {
     console.log(error, `Errroo`);
     addRecipeView.addrecipe.renderError(error.message);
@@ -115,7 +120,7 @@ const controlAddrecipe = async function (newRecipe) {
 const init = function () {
   // iniciando o app com a funcao init logo no inicio  TODO
   bookmarkView.addHandlerRender(controlBookmarks);
-  addRecipeView.addHandlerUpload(controlAddrecipe);
+  addRecipeView.addHandlerUpload(controlAddRecipe);
   recipeView.addHandlerRender(controlRecipe);
   recipeView.addHandlerUpdateServings(controllerServings);
   recipeView.haddHandlerBookmark(controlAddBookmark);
