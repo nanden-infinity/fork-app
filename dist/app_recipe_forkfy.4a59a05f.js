@@ -2276,6 +2276,7 @@ var _configJs = require("./config.js");
 var _helpersJs = require("./helpers.js");
 var _bookmarkViewJs = require("./views/bookmark_View.js");
 var _bookmarkViewJsDefault = parcelHelpers.interopDefault(_bookmarkViewJs);
+console.log((0, _helpersJs.setJSON));
 const state = {
     recipe: {},
     search: {
@@ -2392,7 +2393,7 @@ const uploadRecipe = async function(newRecipe) {
             servings: Number(newRecipe.servings),
             ingredients
         };
-        const data = await sendJSON(`${(0, _configJs.endpoint)}?key=${(0, _configJs.KEY)}`, recipe);
+        const data = await (0, _helpersJs.setJSON)(`${(0, _configJs.endpoint)}?key=${(0, _configJs.KEY)}`, recipe);
         state.recipe = createRecipeObject(data);
         addBookmark(state.recipe);
     } catch (error) {
@@ -2402,7 +2403,7 @@ const uploadRecipe = async function(newRecipe) {
 }; // init();
  // ['load', 'DOMContentLoaded'].forEach(e => window.addEventListener(e, init));
 
-},{"./config.js":"2hPh4","./helpers.js":"7nL9P","./views/bookmark_View.js":"iyKS8","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"2hPh4":[function(require,module,exports,__globalThis) {
+},{"./config.js":"2hPh4","./views/bookmark_View.js":"iyKS8","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","./helpers.js":"7nL9P"}],"2hPh4":[function(require,module,exports,__globalThis) {
 //  const KEY = "b1aad4fb-a9e4-44af-ba68-86c4d71f8958";
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
@@ -2433,7 +2434,6 @@ const timeout = function(s) {
     });
 };
 const getJSON = async function(url) {
-    console.log(url);
     const raceFetch = [
         fetch(url),
         timeout((0, _configJs.TIMEOUT_SEC))
